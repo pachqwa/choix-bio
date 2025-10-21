@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Tubes & Analyses</title>
+  <link rel="stylesheet" href="style_cleaned.css?v=1.0.0"/>
+  <link rel="manifest" href="manifest.json">
+<!-- Ton script principal (logique recherche + favoris) -->
+<script src="app_refactorise_v3_0.js" defer></script> 
+</head>
+<body>
+  <header class="top">
+    <div class="header-row">
+      <h1>Tubes & Analyses</h1>
+      <button id="ordreBtn" title="Afficher l'ordre de prélèvement">🧪 Ordre des tubes</button>
+<!-- ============================================================
+     🧪 SECTION : ORDRE DES TUBES
+     ------------------------------------------------------------
+     - Masquée par défaut (gérée par le JS)
+     - Affichée au clic sur le bouton "🧪 Ordre des tubes"
+     - Contient les pastilles colorées + noms de tubes
+============================================================ -->
+
+<div id="ordreContainer" hidden>
+  <div class="ordre-ligne">
+
+    <!-- 1. Purge -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: GhostWhite;">1</div>
+      <div class="tube-label">Purge</div>
+    </div>
+
+    <!-- 2. Citrate -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: DeepSkyBlue;">2</div>
+      <div class="tube-label">Citrate</div>
+    </div>
+
+    <!-- 3. Sérum -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: Red;">3</div>
+      <div class="tube-label">Sérum</div>
+    </div>
+
+    <!-- 4. Métaux -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: MediumBlue;">4</div>
+      <div class="tube-label">Métaux</div>
+    </div>
+
+    <!-- 5. Hépariné clair -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: LightGreen;">5</div>
+      <div class="tube-label">Hépariné</div>
+    </div>
+
+    <!-- 6. Hépariné foncé -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: ForestGreen;">6</div>
+      <div class="tube-label">Hépariné</div>
+    </div>
+
+    <!-- 7. EDTA -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: BlueViolet;">7</div>
+      <div class="tube-label">EDTA</div>
+    </div>
+
+    <!-- 8. Transfusion -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: HotPink;">8</div>
+      <div class="tube-label">Transfusion</div>
+    </div>
+
+    <!-- 9. Fluor -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: Silver;">9</div>
+      <div class="tube-label">Fluor</div>
+    </div>
+
+    <!-- 10. DNA -->
+    <div class="tube-item">
+      <div class="tube-dot" style="background: Seashell;">10</div>
+      <div class="tube-label">DNA</div>
+    </div>
+
+  </div>
+</div>
+
+
+    </div>
+  
+    <div class="search-wrap">
+      <input id="searchInput" type="search" placeholder="Rechercher une analyse..." autocomplete="off" />
+      <button id="clearBtn" title="Effacer">✕</button>
+      <button id="favToggle" title="Voir mes favoris">⭐ Favoris</button>
+    </div>
+  </header>  
+
+  <main class="container">
+    <div id="info" class="info">Tapez pour lancer la recherche</div>
+    <ul id="results" class="results" aria-live="polite"></ul>
+  </main>
+
+  <footer style="margin-top:2rem; text-align:center; font-size:0.9rem;">
+   <a href="mentions-confidentialite.html">Mentions légales & Politique de confidentialité</a>
+  </footer>
+
+  <script>
+    // =========================================================
+    // 🔧 ENREGISTREMENT DU NOUVEAU SERVICE WORKER
+    // =========================================================
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("service-worker-refactorise.js")
+          .then(reg => {
+            console.log("✅ Service Worker enregistré avec succès :", reg.scope);
+          })
+          .catch(err => {
+            console.error("❌ Erreur lors de l’enregistrement du Service Worker :", err);
+          });
+      });
+    } else {
+      console.warn("🚫 Les Service Workers ne sont pas supportés par ce navigateur.");
+    }
+  </script>
+  
+  <!-- ===============================
+ 📜 SCRIPTS PRINCIPAUX
+=============================== -->
+
+<!-- Enregistrement du Service Worker -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("service-worker-refactorise.js")
+        .then((reg) => {
+          console.log("✅ Service Worker enregistré avec succès :", reg.scope);
+        })
+        .catch((err) => {
+          console.error("❌ Erreur lors de l’enregistrement du Service Worker :", err);
+        });
+    });
+  } else {
+    console.warn("🚫 Les Service Workers ne sont pas supportés par ce navigateur.");
+  }
+</script>
+
+</body>
+</html>
