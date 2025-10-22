@@ -910,35 +910,29 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('controllerchange', requestSWVersion);
       }
     }
-    
-/* ============================================================
-   🌗 GESTION DU THÈME CLAIR / SOMBRE INTELLIGENT
-   ============================================================ */
-   (function() {
-    const toggleBtn = document.getElementById('themeToggle');
-  
-    // 🔹 Charger le thème depuis localStorage ou suivre la préférence système
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-    let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', currentTheme);
-  
-    // 🔹 Texte du bouton selon le thème
-    const updateButton = () => {
-      toggleBtn.textContent = currentTheme === 'dark' ? '🌙' : '🌞';
-    };
-    updateButton();
-  
-    // 🔹 Événement clic → bascule de thème
-    toggleBtn.addEventListener('click', () => {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', currentTheme);
-      localStorage.setItem('theme', currentTheme);
-      updateButton();
-    });
-  })();  
 
+/* ============================================================
+   ⚡ Gestion intelligente du mode hors ligne
+   ============================================================ */
+(function() {
+  const banner = document.getElementById('offlineBanner');
+
+  // Fonction d'affichage
+  function updateOnlineStatus() {
+    if (navigator.onLine) {
+      banner.setAttribute('hidden', '');
+      console.log('🟢 En ligne');
+    } else {
+      banner.removeAttribute('hidden');
+      console.warn('🔴 Hors ligne');
+    }
+  }
+
+  // État initial + écouteurs
+  window.addEventListener('load', updateOnlineStatus);
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+})();
 
   })();
   

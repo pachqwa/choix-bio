@@ -1,63 +1,55 @@
 /* ============================================================
-   💡 MINI TUTORIEL D’ACCUEIL — Version allégée (modulaire)
-   ------------------------------------------------------------
-   - Affiche une bulle la première fois uniquement
-   - Option "Ne plus afficher"
-   - Intégration indépendante du JS principal
+   🎓 Tutoriel interactif sombre (v3 - auto au premier lancement)
    ============================================================ */
-
-   (() => {
-    if (localStorage.getItem("tutorialSeen") === "true") return;
+   (function () {
+    const TUTORIAL_KEY = "tutorialSeen";
   
-    const overlay = document.createElement("div");
-    overlay.id = "tuto-overlay";
-    overlay.innerHTML = `
-      <div class="tuto-popup">
-        <h3>👋 Bienvenue !</h3>
-        <p>Vous pouvez rechercher une analyse, afficher l’ordre des tubes 🧪 et gérer vos favoris ⭐.<br><br>
-        Bonne utilisation !</p>
-        <div class="tuto-actions">
-          <label><input type="checkbox" id="hideTuto"> Ne plus afficher</label>
-          <button id="tuto-close">Fermer</button>
+    // --- Crée la bulle du tutoriel
+    const tutorial = document.createElement("div");
+    tutorial.id = "tutorialBox";
+    tutorial.innerHTML = `
+      <div class="tutorial-content">
+        <h3>Bienvenue 👋</h3>
+        <p>
+          Découvrez comment utiliser l'application :<br><br>
+          🔍 Recherchez une analyse<br>
+          ⭐ Ajoutez des favoris<br>
+          🧪 Consultez l’ordre des tubes
+        </p>
+        <div class="tutorial-actions">
+          <button id="closeTutorial">J’ai compris</button>
         </div>
       </div>
     `;
-    document.body.appendChild(overlay);
+    document.body.appendChild(tutorial);
   
-    const closeBtn = overlay.querySelector("#tuto-close");
-    const hideChk = overlay.querySelector("#hideTuto");
-  
+    const closeBtn = tutorial.querySelector("#closeTutorial");
     closeBtn.addEventListener("click", () => {
-      overlay.style.opacity = "0";
-      setTimeout(() => overlay.remove(), 300);
-      if (hideChk.checked) localStorage.setItem("tutorialSeen", "true");
+      tutorial.classList.add("fade-out");
+      setTimeout(() => tutorial.remove(), 300);
+      localStorage.setItem(TUTORIAL_KEY, "true");
     });
-/* ============================================================
-   🔁 LIEN "VOIR À NOUVEAU LE TUTORIEL" — VERSION STABLE PWA
-   ============================================================ */
-   (() => {
-    const footerLink = document.createElement("div");
-    footerLink.id = "tuto-relaunch";
-    footerLink.textContent = "💡 Voir à nouveau le tutoriel";
-    footerLink.title = "Relancer la bulle de bienvenue";
-    document.body.appendChild(footerLink);
   
-    footerLink.addEventListener("click", async () => {
-      localStorage.removeItem("tutorialSeen");
+    // --- Bouton pour relancer le tutoriel
+    const restartBtn = document.createElement("button");
+    restartBtn.id = "restartTutorial";
+    restartBtn.textContent = "🎓 Voir à nouveau le tutoriel";
+    document.body.appendChild(restartBtn);
   
-      // 🔥 Force un vrai refresh complet en contournant le cache SW
-      if ('serviceWorker' in navigator) {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        for (const reg of regs) await reg.unregister();
-      }
-  
-      // Puis recharge après une légère pause
-      setTimeout(() => {
-        window.location.reload(true);
-      }, 300);
+    restartBtn.addEventListener("click", () => {
+      localStorage.removeItem(TUTORIAL_KEY);
+      location.reload();
     });
-  })();
   
-
+    // --- Affiche automatiquement au premier lancement
+    if (!localStorage.getItem(TUTORIAL_KEY)) {
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          tutorial.classList.add("visible");
+        }, 600);
+      });
+    } else {
+      tutorial.remove();
+    }
   })();
   
