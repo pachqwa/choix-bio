@@ -847,3 +847,112 @@ body::before {
 #update-toast button:hover {
   background: #1e293b;
 }
+/* ============================================================
+   🎨 UNIFORMISATION DES BOUTONS — Palette unique
+   - Ajoute/colle ce bloc EN FIN de style_cleaned.css
+   - N'écrase rien : on override les règles existantes
+   - Bleu principal : #2563eb / Survol : #3b82f6 / Texte : #fff
+   ============================================================ */
+
+   :root {
+    --btn-bg:        #2563eb;
+    --btn-bg-hover:  #3b82f6;
+    --btn-text:      #ffffff;
+    --btn-ghost-bg:  rgba(59,130,246,0.25);
+    --btn-ghost-bd:  rgba(59,130,246,0.45);
+    --btn-ghost-bgH: rgba(59,130,246,0.40);
+  }
+  
+  /* Boutons de la barre de recherche (effacer, favoris, etc.) */
+  .search-wrap button,
+  #clearBtn,
+  #favToggle {
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border: none !important;
+    border-radius: 0.7rem !important;
+    padding: 0.55rem 1rem !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  .search-wrap button:hover,
+  #clearBtn:hover,
+  #favToggle:hover {
+    background: var(--btn-bg-hover) !important;
+    transform: translateY(-1px);
+  }
+  
+  /* Bouton "Ordre des tubes" */
+  #ordreBtn {
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border: none !important;
+    border-radius: 0.7rem !important;
+    padding: 10px 16px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  #ordreBtn:hover { background: var(--btn-bg-hover) !important; }
+  
+  /* Bouton Vocal (cohérent + centré) */
+  #voiceSearchBtn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+    border-radius: 0.7rem !important;
+    padding: 0.55rem 1rem !important;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  /* le libellé "Vocal" est déjà ajouté par ::after dans ton CSS, on le garde */
+  #voiceSearchBtn:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+  }
+  /* centrage horizontal sur mobile */
+  @media (max-width: 768px) {
+    .search-wrap #voiceSearchBtn { margin: 0 auto !important; }
+  }
+  
+  /* Boutons du mini-tutoriel */
+  .tuto-actions button,
+  #tuto-relaunch {
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+  }
+  .tuto-actions button:hover,
+  #tuto-relaunch:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+  }
+  
+  /* Barre outils favoris (on reste en "ghost" mais harmonisé) */
+  .fav-toolbar button {
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+  }
+  .fav-toolbar button:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+    color: #fff !important;
+  }
+  
+  /* Option : états focus accessibles (clavier) */
+  .search-wrap button:focus-visible,
+  #ordreBtn:focus-visible,
+  #voiceSearchBtn:focus-visible,
+  #clearBtn:focus-visible,
+  #favToggle:focus-visible,
+  .tuto-actions button:focus-visible,
+  #tuto-relaunch:focus-visible {
+    outline: 2px solid var(--btn-bg-hover);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
+  }
+  

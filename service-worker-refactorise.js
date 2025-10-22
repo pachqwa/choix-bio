@@ -7,7 +7,7 @@
    - Toast visible en mode navigateur (via app_refactorise)
    ============================================================ */
 
-   const CACHE_VERSION = 'v2.7';
+   const CACHE_VERSION = 'v2.8';
    const CACHE_NAME = `pwa-tube-cache-${CACHE_VERSION}`;
    
    /* 🗂️ Liste des fichiers à mettre en cache au premier chargement */

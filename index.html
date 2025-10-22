@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Tubes & Analyses</title>
-  <link rel="stylesheet" href="style_cleaned.css"/>
+  <link rel="stylesheet" href="style_cleaned.css?v=2.6.5"/>
   <link rel="manifest" href="manifest.json">
 <!-- Ton script principal (logique recherche + favoris) -->
 <script src="app_refactorise_v3_0.js" defer></script> 
@@ -109,26 +109,6 @@
     // =========================================================
     // 🔧 ENREGISTREMENT DU NOUVEAU SERVICE WORKER
     // =========================================================
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("service-worker-refactorise.js")
-          .then(reg => {
-            console.log("✅ Service Worker enregistré avec succès :", reg.scope);
-          })
-          .catch(err => {
-            console.error("❌ Erreur lors de l’enregistrement du Service Worker :", err);
-          });
-      });
-    } else {
-      console.warn("🚫 Les Service Workers ne sont pas supportés par ce navigateur.");
-    }
-  </script>
-  
-  <!-- ===============================
- 📜 SCRIPTS PRINCIPAUX
-=============================== -->
-
 <!-- Enregistrement du Service Worker -->
 <script>
   if ("serviceWorker" in navigator) {
