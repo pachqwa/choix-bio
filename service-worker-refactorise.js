@@ -1,14 +1,16 @@
 /* ============================================================
-   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.6)
+   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.7)
    ------------------------------------------------------------
-   - Mise à jour automatique des fichiers (CSS/JS/HTML)
    - Stratégie "stale-while-revalidate"
-   - Fallback offline + nettoyage cache
+   - Nettoyage automatique des anciens caches
+   - Mise à jour silencieuse en mode PWA installée
+   - Toast visible en mode navigateur (via app_refactorise)
    ============================================================ */
 
-   const CACHE_VERSION = 'v2.6';
+   const CACHE_VERSION = 'v2.7';
    const CACHE_NAME = `pwa-tube-cache-${CACHE_VERSION}`;
    
+   /* 🗂️ Liste des fichiers à mettre en cache au premier chargement */
    const STATIC_ASSETS = [
      './',
      './index.html',
@@ -19,18 +21,22 @@
      './offline.html',
    ];
    
-   /* 📦 INSTALLATION */
+   /* ============================================================
+      📦 INSTALLATION — Pré-cache des fichiers de base
+      ============================================================ */
    self.addEventListener('install', (event) => {
-     console.log(`📦 [SW ${CACHE_VERSION}] Installation...`);
+     console.log(`📦 [SW ${CACHE_VERSION}] Installation…`);
      event.waitUntil(
        caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
      );
      self.skipWaiting();
    });
    
-   /* 🧹 ACTIVATION — Nettoyage anciens caches */
+   /* ============================================================
+      🧹 ACTIVATION — Suppression des anciens caches
+      ============================================================ */
    self.addEventListener('activate', (event) => {
-     console.log(`🧹 [SW ${CACHE_VERSION}] Activation & nettoyage...`);
+     console.log(`🧹 [SW ${CACHE_VERSION}] Activation & nettoyage…`);
      event.waitUntil(
        caches.keys().then((keys) =>
          Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
@@ -39,41 +45,42 @@
      self.clients.claim();
    });
    
-   /* 🌐 FETCH — Stratégie stale-while-revalidate */
+   /* ============================================================
+      🌐 FETCH — Stratégie “Stale-While-Revalidate”
+      ============================================================ */
    self.addEventListener('fetch', (event) => {
-     // On ne gère que les requêtes HTTP/HTTPS
      if (!event.request.url.startsWith('http')) return;
    
      event.respondWith(
        caches.open(CACHE_NAME).then(async (cache) => {
-         const cached = await cache.match(event.request);
-         const networkFetch = fetch(event.request)
+         const cachedResponse = await cache.match(event.request);
+         const fetchPromise = fetch(event.request)
            .then((networkResponse) => {
              if (networkResponse && networkResponse.status === 200) {
                cache.put(event.request, networkResponse.clone());
-               console.log(`🔄 [SW] Mise à jour du cache : ${event.request.url}`);
+               console.log(`🔄 [SW] Cache mis à jour : ${event.request.url}`);
              }
              return networkResponse;
            })
            .catch(() => {
-             if (cached) return cached;
+             if (cachedResponse) return cachedResponse;
              if (event.request.mode === 'navigate') {
                return cache.match('./offline.html');
              }
            });
    
-         // Sert d’abord le cache si dispo, sinon le réseau
-         return cached || networkFetch;
+         return cachedResponse || fetchPromise;
        })
      );
-     /* ============================================================
-   🔔 NOTIFICATION VISUELLE — Nouvelle version disponible
-   ============================================================ */
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
+   });
+   
+   /* ============================================================
+      🔔 MESSAGE — Activation immédiate du nouveau SW
+      ============================================================ */
+   self.addEventListener('message', (event) => {
+     if (event.data && event.data.type === 'SKIP_WAITING') {
+       console.log('⚡ [SW] Skip waiting activé — passage à la nouvelle version');
+       self.skipWaiting();
+     }
    });
    

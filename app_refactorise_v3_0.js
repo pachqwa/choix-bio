@@ -630,3 +630,70 @@ window.addEventListener("offline", updateNetworkLabel);
 // Exécution initiale
 updateNetworkStatus();
 
+/* ============================================================
+   🧠 DÉTECTION DE NOUVELLE VERSION DU SERVICE WORKER
+   ============================================================ */
+   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (!reg) return;
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateToast();
+          }
+        });
+      });
+    });
+  }
+  
+/* ============================================================
+   🧠 MISE À JOUR SERVICE WORKER — AUTOMATIQUE EN SILENCE
+   ------------------------------------------------------------
+   - Si PWA installée : update silencieuse
+   - Si ouverte dans le navigateur : toast visible
+   ============================================================ */
+   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (!reg) return;
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+              // ✅ Mode application (installée)
+              reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+              console.log("🔄 Mise à jour silencieuse du SW (mode PWA)");
+              window.location.reload(true);
+            } else {
+              // 🌐 Mode navigateur — affiche le toast
+              showUpdateToast();
+            }
+          }
+        });
+      });
+    });
+  }
+  
+  /* ============================================================
+     🍞 TOAST VISUEL (affiché uniquement si non installé)
+     ============================================================ */
+  function showUpdateToast() {
+    const toast = document.createElement("div");
+    toast.id = "update-toast";
+    toast.innerHTML = `
+      🔄 Nouvelle version disponible<br>
+      <button id="refreshApp">Recharger</button>
+    `;
+    document.body.appendChild(toast);
+  
+    document.getElementById("refreshApp").addEventListener("click", () => {
+      navigator.serviceWorker.getRegistration().then(reg => {
+        if (reg && reg.waiting) {
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+      });
+      window.location.reload(true);
+    });
+  }
+  
