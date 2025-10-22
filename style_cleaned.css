@@ -647,3 +647,171 @@ body::before {
   background: rgba(59,130,246,0.3);
   border-color: rgba(59,130,246,0.6);
 }
+
+/* === 💡 MINI TUTORIEL LÉGER === */
+#tuto-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+}
+
+.tuto-popup {
+  background: rgba(30, 41, 59, 0.96);
+  border: 1px solid rgba(59,130,246,0.4);
+  border-radius: 14px;
+  padding: 22px 26px;
+  max-width: 420px;
+  color: #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: fadeInUp 0.4s ease;
+}
+
+.tuto-popup h3 {
+  color: #93c5fd;
+  margin-top: 0;
+}
+
+.tuto-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tuto-actions button {
+  background: rgba(59,130,246,0.3);
+  color: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tuto-actions button:hover {
+  background: rgba(59,130,246,0.5);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === 💡 RE AFFICHER MINI TUTORIEL LÉGER === */
+
+#tuto-relaunch {
+  position: fixed;
+  bottom: 10px;
+  right: 12px;
+  font-size: 0.9rem;
+  background: rgba(59,130,246,0.2);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #93c5fd;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+#tuto-relaunch:hover {
+  background: rgba(59,130,246,0.4);
+  color: #e2e8f0;
+}
+
+#tuto-relaunch {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+#tuto-relaunch:hover {
+  opacity: 1;
+}
+/* === PATCH A — centrage mobile des boutons, sans changer le desktop === */
+@media (max-width: 768px) {
+  .search-wrap {
+    display: flex;            /* au cas où */
+    flex-direction: column;   /* empile */
+    align-items: center;      /* centre */
+    gap: 8px;
+  }
+
+  .search-wrap input[type="search"] {
+    width: 90%;
+    max-width: 360px;
+    margin-bottom: 6px;
+  }
+
+  .search-wrap button {
+    width: auto;
+    min-width: 130px;
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+/* fin patch A */
+/* === PATCH B — bouton vocal, lisible et cohérent === */
+#voiceSearchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(59,130,246,0.25);
+  border: 1px solid rgba(59,130,246,0.4);
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+#voiceSearchBtn::after {
+  content: "Vocal";          /* ajoute le texte sans toucher au HTML */
+  font-size: 0.85rem;
+  color: #a5b4fc;
+}
+
+#voiceSearchBtn:hover {
+  background: rgba(59,130,246,0.4);
+  border-color: rgba(59,130,246,0.6);
+}
+
+/* optionnel : si ton JS ajoute une classe .listening pendant l’écoute */
+#voiceSearchBtn.listening {
+  background: rgba(59,130,246,0.45);
+  border-color: rgba(59,130,246,0.7);
+}
+/* === PATCH C — étoile réduite + glow plus doux === */
+.fav-btn,
+.fav-icon,
+.result-item .star {
+  font-size: 1.15rem !important;   /* réduit (ajoute !important si nécessaire) */
+  line-height: 1;
+  transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease;
+}
+
+/* Si tes étoiles sont en SVG, dé-commente :
+.result-item .star svg,
+.fav-icon svg,
+.fav-btn svg { width: 18px; height: 18px; }
+*/
+
+.fav-btn.active,
+.fav-icon.active,
+.result-item .star.active {
+  color: #facc15;
+  text-shadow: 0 0 4px rgba(250,204,21,0.35);
+  animation: starGlowSoft 0.6s ease;
+}
+
+@keyframes starGlowSoft {
+  0%   { transform: scale(1);   opacity: 0.85; }
+  50%  { transform: scale(1.1); opacity: 1;    }
+  100% { transform: scale(1);   opacity: 1;    }
+}

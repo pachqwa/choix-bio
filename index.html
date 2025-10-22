@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Tubes & Analyses</title>
-  <link rel="stylesheet" href="style_cleaned.css?v=1.0.0"/>
+  <link rel="stylesheet" href="style_cleaned.css"/>
   <link rel="manifest" href="manifest.json">
 <!-- Ton script principal (logique recherche + favoris) -->
 <script src="app_refactorise_v3_0.js" defer></script> 
@@ -88,9 +88,7 @@
   </div>
 </div>
 
-
-    </div>
-  
+    </div>  
     <div class="search-wrap">
       <input id="searchInput" type="search" placeholder="Rechercher une analyse..." autocomplete="off" />
       <button id="clearBtn" title="Effacer">✕</button>
@@ -148,6 +146,8 @@
     console.warn("🚫 Les Service Workers ne sont pas supportés par ce navigateur.");
   }
 </script>
+
+<script src="tutorial.js"></script>
 
 </body>
 </html>
