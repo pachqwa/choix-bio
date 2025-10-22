@@ -1,0 +1,957 @@
+/* ============================================================
+   💅 FEUILLE DE STYLE PWA "MULTI-TUBE ANALYZER"
+   Version nettoyée et optimisée — Octobre 2025
+   Auteur : ChatGPT x Pasqua
+   Description :
+   - Code allégé et organisé par sections
+   - Mode sombre unifié
+   - Style mobile-first
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   🌐 STYLE GLOBAL
+------------------------------------------------------------ */
+html, body {
+  background-color: #0f172a !important; /* Fond principal (bleu nuit) */
+  color: #e2e8f0 !important;            /* Texte principal */
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+
+main {
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ------------------------------------------------------------
+   🔝 EN-TÊTE (HEADER / TOP BAR)
+------------------------------------------------------------ */
+header.top {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 0;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   🔍 BARRE DE RECHERCHE
+------------------------------------------------------------ */
+.search-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.search-wrap input[type="search"],
+.search-wrap input[type="text"] {
+  flex: 1;
+  max-width: 400px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.search-wrap button {
+  background: #1e90ff;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.search-wrap button:hover {
+  background: #0d6efd;
+}
+
+/* ------------------------------------------------------------
+   🧾 ZONE D'INFORMATION / MESSAGES
+------------------------------------------------------------ */
+#info {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 12px 0;
+}
+
+/* ------------------------------------------------------------
+   🔎 LISTE DES RÉSULTATS
+------------------------------------------------------------ */
+#results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 6px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  transition: background 0.2s ease;
+}
+
+.result-item:hover {
+  background: #f1f5f9;
+}
+
+.result-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.result-sub {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* ------------------------------------------------------------
+   ⭐ FONCTION FAVORIS (ÉTOILES)
+------------------------------------------------------------ */
+/* ======== Boutons Favoris (étoiles dans les résultats) ======== */
+.result-item .star {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #9ca3af; /* gris clair par défaut */
+  transition: transform 0.2s ease, color 0.3s ease, text-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-item .star:hover {
+  transform: scale(1.15);
+  color: #eab308; /* jaune doré au survol */
+  text-shadow: 0 0 6px rgba(234,179,8,0.4);
+}
+
+.result-item .star.active {
+  color: #facc15; /* doré */
+  text-shadow: 0 0 8px rgba(250,204,21,0.6);
+  transform: scale(1.2);
+}
+
+
+/* ======== Barre de tri et suppression favoris ======== */
+.fav-toolbar button {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+}
+
+/* ------------------------------------------------------------
+   🧪 Bouton Tri & Supprimer
+------------------------------------------------------------ */
+
+.fav-toolbar button:hover {
+  background: rgba(59,130,246,0.25); /* bleu léger */
+  border-color: #3b82f6;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-clear-all {
+  border-color: #ef4444 !important;
+  color: #f87171 !important;
+}
+
+.btn-clear-all:hover {
+  background: rgba(239,68,68,0.25) !important;
+  color: #fff !important;
+  border-color: #ef4444 !important;
+}
+
+/* ------------------------------------------------------------
+   🧪 SECTION "ORDRE DES TUBES"
+------------------------------------------------------------ */
+#ordreBtn {
+  display: block;
+  margin: 20px auto;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+#ordreBtn:hover {
+  background: #0284c7;
+}
+
+.ordre-container[hidden] {
+  display: none;
+}
+
+.ordre-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  text-align: center;
+}
+
+.tube-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+/* Nom sous chaque pastille */
+.tube-label {
+  margin-top: 6px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  color: #334155;
+  max-width: 64px;
+  word-wrap: break-word;
+}
+
+/* 🌙 Adaptation mode sombre */
+@media (prefers-color-scheme: dark) {
+  .tube-label {
+    color: #e2e8f0;
+  }
+}
+
+/* ------------------------------------------------------------
+   📱 RESPONSIVE DESIGN
+------------------------------------------------------------ */
+@media (max-width: 600px) {
+  .search-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-wrap input {
+    max-width: 100%;
+  }
+  #ordreBtn {
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------
+   🌙 MODE SOMBRE UNIFIÉ
+------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  body, main, header {
+    background-color: #0f1724 !important;
+    color: #f7fafc !important;
+  }
+
+  header.top, .search-wrap {
+    background: #0f1724 !important;
+    border-color: #1e293b !important;
+  }
+
+  input[type="search"], input[type="text"] {
+    background: #1e293b !important;
+    color: #f7fafc !important;
+    border: 1px solid #334155 !important;
+  }
+
+  input::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  .result-item {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+  }
+
+  .result-item:hover {
+    background: rgba(30,144,255,0.22) !important;
+  }
+
+  .result-title { color: #f8fafc !important; }
+  .result-sub { color: #94a3b8 !important; }
+  .tube-label { color: #e2e8f0 !important; }
+  a { color: #38bdf8 !important; }
+  #info { color: #cbd5e1 !important; }
+}
+
+/* ============================================================
+   🧪 CORRECTION VISUELLE + COMPORTEMENT DU BOUTON ORDRE
+============================================================ */
+
+/* Masqué par défaut */
+.ordre-container[hidden] {
+  display: none !important;
+}
+
+/* Visible uniquement quand le JS retire [hidden] */
+.ordre-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 20px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeInScale 0.6s ease forwards;
+  flex-direction: row !important;
+}
+
+/* Pastilles */
+.tube-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 15px;
+  color: white;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  animation: popIn 0.4s ease both;
+}
+
+/* Nom sous les pastilles */
+.tube-label {
+  margin-top: 6px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  color: #334155;
+  max-width: 80px;
+  word-wrap: break-word;
+  animation: fadeInLabel 0.6s ease both;
+}
+/* ============================================================
+   🧪 ORDRE DES TUBES — VERSION OPTIMISÉE ET AFFINÉE
+============================================================ */
+
+#ordreContainer[hidden] {
+  display: none !important;
+}
+
+#ordreContainer:not([hidden]) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #1e293b; /* même fond que le reste */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 14px auto 20px auto;
+  max-width: 850px;
+  animation: fadeInScale 0.4s ease forwards;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Ligne horizontale de pastilles */
+#ordreContainer .ordre-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 10px auto;
+  max-width: 800px;
+}
+
+/* Chaque pastille (plus fine, sans texte à l’intérieur) */
+#ordreContainer .tube-dot {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#ordreContainer .tube-dot:hover {
+  transform: scale(1.06);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Nom sous la pastille */
+#ordreContainer .tube-label {
+  margin-top: 4px;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+  color: #e2e8f0;
+  word-wrap: break-word;
+  max-width: 60px;
+}
+
+#ordreContainer .tube-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 3px;
+  flex: 1 1 64px; /* autorise l’adaptation fluide */
+  min-width: 58px;
+  max-width: 70px;
+}
+
+/* 🌙 Mode clair */
+@media (prefers-color-scheme: light) {
+  #ordreContainer .tube-label {
+    color: #334155;
+  }
+}
+
+/* Animation fluide */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   📱 VERSION RESPONSIVE — OPTIMISÉE POUR MOBILE
+   - Pastilles plus larges et espacées sur petit écran
+   - Réorganisation automatique en 2 lignes max
+============================================================ */
+
+/* 📱 Mobile / tablette : adaptation fluide */
+@media (max-width: 800px) {
+  #ordreContainer .tube-item {
+    flex: 1 1 60px;
+    min-width: 54px;
+    max-width: 65px;
+  }
+  #ordreContainer .tube-dot {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
+  }
+  #ordreContainer .tube-label {
+    font-size: 10.5px;
+    max-width: 54px;
+  }
+}
+
+/* Très petits écrans (≤450px) */
+@media (max-width: 450px) {
+  #ordreContainer .tube-item {
+    flex: 1 1 50px;
+    min-width: 50px;
+  }
+  #ordreContainer .tube-dot {
+    width: 34px;
+    height: 34px;
+    font-size: 11px;
+  }
+  #ordreContainer .tube-label {
+    font-size: 10px;
+    max-width: 50px;
+  }
+}
+/* ============================================================
+   🧪 ORDRE DES TUBES — Version stable avec animation fluide
+============================================================ */
+
+#ordreContainer[hidden] {
+  display: none;
+}
+
+#ordreContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e293b;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 14px auto 20px auto;
+  max-width: 850px;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#ordreContainer.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#ordreContainer .tube-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#ordreContainer.active .tube-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#ordreContainer.active .tube-item:nth-child(1) { transition-delay: 0.05s; }
+#ordreContainer.active .tube-item:nth-child(2) { transition-delay: 0.1s; }
+#ordreContainer.active .tube-item:nth-child(3) { transition-delay: 0.15s; }
+#ordreContainer.active .tube-item:nth-child(4) { transition-delay: 0.2s; }
+#ordreContainer.active .tube-item:nth-child(5) { transition-delay: 0.25s; }
+#ordreContainer.active .tube-item:nth-child(6) { transition-delay: 0.3s; }
+#ordreContainer.active .tube-item:nth-child(7) { transition-delay: 0.35s; }
+#ordreContainer.active .tube-item:nth-child(8) { transition-delay: 0.4s; }
+#ordreContainer.active .tube-item:nth-child(9) { transition-delay: 0.45s; }
+#ordreContainer.active .tube-item:nth-child(10) { transition-delay: 0.5s; }
+
+/* Base sombre inconditionnelle */
+html, body {
+  background-color: #0b1622;     /* ton bleu nuit */
+  color-scheme: dark;            /* force le thème sombre natif */
+  min-height: 100%;
+}
+
+/* Si un parent coupe ou laisse transparents des zones, on tapisse derrière */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #0b1622;
+  z-index: -1;                   /* juste un “mur” sombre derrière tout */
+}
+
+/* Le header de recherche ne doit pas couper le dropdown */
+.search-wrap { position: relative; overflow: visible; }
+
+/* Les conteneurs de résultats ne doivent pas remettre du blanc */
+#results, .results-wrapper, .results-section, main, .page {
+  background: transparent !important;
+}
+
+/* (optionnel) scroll discret du panneau suggestions */
+#suggestions-list::-webkit-scrollbar { width: 6px; }
+#suggestions-list::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.35);
+  border-radius: 4px;
+}
+/* === 🕓 HISTORIQUE DE RECHERCHE === */
+#search-history {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+  transition: all 0.3s ease;
+}
+
+/*historique en mémoire*/
+#search-history .hist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: #93c5fd;
+  margin-bottom: 6px;
+}
+
+#search-history .hist-header button {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#search-history .hist-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#search-history .hist-list li {
+  background: rgba(59, 130, 246, 0.15);
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #e2e8f0;
+  transition: background .2s;
+}
+
+#search-history .hist-list li:hover {
+  background: rgba(59, 130, 246, 0.35);
+}
+
+#search-history .delOne {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  font-size: .8rem;
+}
+
+/*bouton vocale*/
+#voiceSearchBtn:hover {
+  background: rgba(59,130,246,0.3);
+  border-color: rgba(59,130,246,0.6);
+}
+
+/* === 💡 MINI TUTORIEL LÉGER === */
+#tuto-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+}
+
+.tuto-popup {
+  background: rgba(30, 41, 59, 0.96);
+  border: 1px solid rgba(59,130,246,0.4);
+  border-radius: 14px;
+  padding: 22px 26px;
+  max-width: 420px;
+  color: #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: fadeInUp 0.4s ease;
+}
+
+.tuto-popup h3 {
+  color: #93c5fd;
+  margin-top: 0;
+}
+
+.tuto-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tuto-actions button {
+  background: rgba(59,130,246,0.3);
+  color: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tuto-actions button:hover {
+  background: rgba(59,130,246,0.5);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === 💡 RE AFFICHER MINI TUTORIEL LÉGER === */
+
+#tuto-relaunch {
+  position: fixed;
+  bottom: 10px;
+  right: 12px;
+  font-size: 0.9rem;
+  background: rgba(59,130,246,0.2);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #93c5fd;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+#tuto-relaunch:hover {
+  background: rgba(59,130,246,0.4);
+  color: #e2e8f0;
+}
+
+#tuto-relaunch {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+#tuto-relaunch:hover {
+  opacity: 1;
+}
+/* === PATCH A — centrage mobile des boutons, sans changer le desktop === */
+@media (max-width: 768px) {
+  .search-wrap {
+    display: flex;            /* au cas où */
+    flex-direction: column;   /* empile */
+    align-items: center;      /* centre */
+    gap: 8px;
+  }
+
+  .search-wrap input[type="search"] {
+    width: 90%;
+    max-width: 360px;
+    margin-bottom: 6px;
+  }
+
+  .search-wrap button {
+    width: auto;
+    min-width: 130px;
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+/* fin patch A */
+/* === PATCH B — bouton vocal, lisible et cohérent === */
+#voiceSearchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(59,130,246,0.25);
+  border: 1px solid rgba(59,130,246,0.4);
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+#voiceSearchBtn::after {
+  content: "Vocal";          /* ajoute le texte sans toucher au HTML */
+  font-size: 0.85rem;
+  color: #a5b4fc;
+}
+
+#voiceSearchBtn:hover {
+  background: rgba(59,130,246,0.4);
+  border-color: rgba(59,130,246,0.6);
+}
+
+/* optionnel : si ton JS ajoute une classe .listening pendant l’écoute */
+#voiceSearchBtn.listening {
+  background: rgba(59,130,246,0.45);
+  border-color: rgba(59,130,246,0.7);
+}
+/* === PATCH C — étoile réduite + glow plus doux === */
+.fav-btn,
+.fav-icon,
+.result-item .star {
+  font-size: 1.15rem !important;   /* réduit (ajoute !important si nécessaire) */
+  line-height: 1;
+  transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease;
+}
+
+/* Si tes étoiles sont en SVG, dé-commente :
+.result-item .star svg,
+.fav-icon svg,
+.fav-btn svg { width: 18px; height: 18px; }
+*/
+
+.fav-btn.active,
+.fav-icon.active,
+.result-item .star.active {
+  color: #facc15;
+  text-shadow: 0 0 4px rgba(250,204,21,0.35);
+  animation: starGlowSoft 0.6s ease;
+}
+
+@keyframes starGlowSoft {
+  0%   { transform: scale(1);   opacity: 0.85; }
+  50%  { transform: scale(1.1); opacity: 1;    }
+  100% { transform: scale(1);   opacity: 1;    }
+}
+
+/* === 🔔 TOAST DE MISE À JOUR === */
+#update-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(59,130,246,0.95);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  text-align: center;
+  z-index: 99999;
+  font-size: 0.95rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+#update-toast button {
+  background: #0f172a;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 6px;
+  margin-top: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+#update-toast button:hover {
+  background: #1e293b;
+}
+/* ============================================================
+   🎨 UNIFORMISATION DES BOUTONS — Palette unique
+   - Ajoute/colle ce bloc EN FIN de style_cleaned.css
+   - N'écrase rien : on override les règles existantes
+   - Bleu principal : #2563eb / Survol : #3b82f6 / Texte : #fff
+   ============================================================ */
+
+   :root {
+    --btn-bg:        #2563eb;
+    --btn-bg-hover:  #3b82f6;
+    --btn-text:      #ffffff;
+    --btn-ghost-bg:  rgba(59,130,246,0.25);
+    --btn-ghost-bd:  rgba(59,130,246,0.45);
+    --btn-ghost-bgH: rgba(59,130,246,0.40);
+  }
+  
+  /* Boutons de la barre de recherche (effacer, favoris, etc.) */
+  .search-wrap button,
+  #clearBtn,
+  #favToggle {
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border: none !important;
+    border-radius: 0.7rem !important;
+    padding: 0.55rem 1rem !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  .search-wrap button:hover,
+  #clearBtn:hover,
+  #favToggle:hover {
+    background: var(--btn-bg-hover) !important;
+    transform: translateY(-1px);
+  }
+  
+  /* Bouton "Ordre des tubes" */
+  #ordreBtn {
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border: none !important;
+    border-radius: 0.7rem !important;
+    padding: 10px 16px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  #ordreBtn:hover { background: var(--btn-bg-hover) !important; }
+  
+  /* Bouton Vocal (cohérent + centré) */
+  #voiceSearchBtn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+    border-radius: 0.7rem !important;
+    padding: 0.55rem 1rem !important;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  /* le libellé "Vocal" est déjà ajouté par ::after dans ton CSS, on le garde */
+  #voiceSearchBtn:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+  }
+  /* centrage horizontal sur mobile */
+  @media (max-width: 768px) {
+    .search-wrap #voiceSearchBtn { margin: 0 auto !important; }
+  }
+  
+  /* Boutons du mini-tutoriel */
+  .tuto-actions button,
+  #tuto-relaunch {
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+  }
+  .tuto-actions button:hover,
+  #tuto-relaunch:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+  }
+  
+  /* Barre outils favoris (on reste en "ghost" mais harmonisé) */
+  .fav-toolbar button {
+    background: var(--btn-ghost-bg) !important;
+    border: 1px solid var(--btn-ghost-bd) !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+  }
+  .fav-toolbar button:hover {
+    background: var(--btn-ghost-bgH) !important;
+    border-color: var(--btn-bg-hover) !important;
+    color: #fff !important;
+  }
+  
+  /* Option : états focus accessibles (clavier) */
+  .search-wrap button:focus-visible,
+  #ordreBtn:focus-visible,
+  #voiceSearchBtn:focus-visible,
+  #clearBtn:focus-visible,
+  #favToggle:focus-visible,
+  .tuto-actions button:focus-visible,
+  #tuto-relaunch:focus-visible {
+    outline: 2px solid var(--btn-bg-hover);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
+  }
+  
