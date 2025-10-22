@@ -11,38 +11,14 @@
 /* ------------------------------------------------------------
    🌐 STYLE GLOBAL
 ------------------------------------------------------------ */
+html, body {
+  background-color: #0f172a !important; /* Fond principal (bleu nuit) */
+  color: #e2e8f0 !important;            /* Texte principal */
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
 
-/* ============================================================
-   🌗 Variables globales de thème (prioritaires)
-   ============================================================ */
-   :root {
-    --bg-color: #f8fafc; /* clair */
-    --text-color: #1e293b;
-    --card-bg: #ffffff;
-  }
-  
-  [data-theme="dark"] {
-    --bg-color: #0f172a; /* sombre */
-    --text-color: #e2e8f0;
-    --card-bg: #1e293b;
-  }
-  
-  /* Appliquer les variables partout */
-  html, body {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
-    transition: background 0.4s ease, color 0.4s ease;
-  }
-  
-  /* Cartes, résultats, etc. */
-  .result-item,
-  .result-card,
-  input,
-  button {
-    background-color: var(--card-bg) !important;
-    color: var(--text-color) !important;
-    transition: background 0.4s ease, color 0.4s ease;
-  }  
 
 main {
   padding: 16px;
@@ -573,24 +549,12 @@ header h1 {
 #ordreContainer.active .tube-item:nth-child(9) { transition-delay: 0.45s; }
 #ordreContainer.active .tube-item:nth-child(10) { transition-delay: 0.5s; }
 
-/*  TEST2Base sombre inconditionnelle 
+/* Base sombre inconditionnelle */
 html, body {
-  background-color: #0b1622;     /* ton bleu nuit 
-  color-scheme: dark;            /* force le thème sombre natif 
+  background-color: #0b1622;     /* ton bleu nuit */
+  color-scheme: dark;            /* force le thème sombre natif */
   min-height: 100%;
 }
-*/
-
-/*
-TEST1
-html, body {
-  background-color: #0f172a !important; /* Fond principal (bleu nuit) */
-  color: #e2e8f0 !important;            /* Texte principal 
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-}
-*/
 
 /* Si un parent coupe ou laisse transparents des zones, on tapisse derrière */
 body::before {
@@ -1017,130 +981,3 @@ body::before {
   margin: 2px 0;
 }
 
-/* --- 🌗 Bouton clair/sombre --- */
-#themeToggle {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  z-index: 2000;
-  font-size: 1.2rem;
-  background: rgba(59, 130, 246, 0.15);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
-}
-
-#themeToggle:hover {
-  background: rgba(59, 130, 246, 0.25);
-  transform: scale(1.05);
-}
-
-/* --- Thèmes CLAIR/SOMBRE--- */
-:root {
-  --bg-color: #f8fafc;
-  --text-color: #1e293b;
-  --card-bg: #ffffff;
-}
-
-[data-theme="dark"] {
-  --bg-color: #0f172a;
-  --text-color: #e2e8f0;
-  --card-bg: #1e293b;
-}
-
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background 0.4s ease, color 0.4s ease;
-}
-
-.result-item,
-.result-card {
-  background: var(--card-bg);
-  transition: background 0.4s ease;
-}
-
-html, body, main, header, footer, #results, .result-item {
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
-  transition: background 0.4s ease, color 0.4s ease;
-}
-/* ============================================================
-   🎨 Harmonisation du thème clair/sombre sur tout le fond
-   ============================================================ */
-   html, body, main, header, footer, .app-container, .results, #results, .result-item, .result-card, .frame, section {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
-    transition: background-color 0.4s ease, color 0.4s ease;
-  }
-  
-  input, select, textarea {
-    background-color: var(--card-bg) !important;
-    color: var(--text-color) !important;
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  button {
-    color: var(--text-color) !important;
-  }
-  
-  /* Pour éviter les contrastes trop marqués en clair */
-  [data-theme="light"] .result-item,
-  [data-theme="light"] .result-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  }
-  /* ============================================================
-   🎨 Fix ultime du mode clair/sombre (header + top sections)
-   ============================================================ */
-
-/* Harmonise tous les conteneurs supérieurs */
-header, .app-header, .top-bar, .title-container, .search-bar, .toolbar, .main-header {
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* Boutons et états uniformisés */
-button, .btn, .action-btn {
-  background-color: #2563eb !important;
-  color: white !important;
-  border: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover, .btn:hover, .action-btn:hover {
-  background-color: #1d4ed8 !important;
-}
-
-/* Force la cohérence sur le fond général */
-html, body {
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
-}
-
-/* Ajuste les champs texte */
-input, select, textarea {
-  background-color: var(--card-bg) !important;
-  color: var(--text-color) !important;
-}
-
-/* Lien et texte légaux */
-a {
-  color: var(--text-color) !important;
-  opacity: 0.9;
-}
-
-[data-theme="light"] a {
-  color: #0f172a !important;
-}
-
-[data-theme="dark"] a {
-  color: #93c5fd !important;
-}
