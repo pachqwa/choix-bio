@@ -1,12 +1,14 @@
 /* ============================================================
-   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.0)
+   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.6)
    ------------------------------------------------------------
-   - Mise en cache statique + dynamique
-   - Gestion offline automatique
-   - Notification de mise à jour
+   - Mise à jour automatique des fichiers (CSS/JS/HTML)
+   - Stratégie "stale-while-revalidate"
+   - Fallback offline + nettoyage cache
    ============================================================ */
 
-   const CACHE_NAME = 'pwa-tube-cache-v2';
+   const CACHE_VERSION = 'v2.6';
+   const CACHE_NAME = `pwa-tube-cache-${CACHE_VERSION}`;
+   
    const STATIC_ASSETS = [
      './',
      './index.html',
@@ -17,20 +19,18 @@
      './offline.html',
    ];
    
-   // 🧱 Installation du SW → mise en cache initiale
+   /* 📦 INSTALLATION */
    self.addEventListener('install', (event) => {
-     console.log('📦 [SW] Installation...');
+     console.log(`📦 [SW ${CACHE_VERSION}] Installation...`);
      event.waitUntil(
-       caches.open(CACHE_NAME).then((cache) => {
-         return cache.addAll(STATIC_ASSETS);
-       })
+       caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
      );
      self.skipWaiting();
    });
    
-   // 🔁 Activation → nettoyage des anciens caches
+   /* 🧹 ACTIVATION — Nettoyage anciens caches */
    self.addEventListener('activate', (event) => {
-     console.log('🧹 [SW] Activation et nettoyage...');
+     console.log(`🧹 [SW ${CACHE_VERSION}] Activation & nettoyage...`);
      event.waitUntil(
        caches.keys().then((keys) =>
          Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
@@ -39,25 +39,31 @@
      self.clients.claim();
    });
    
-   // 🌐 Fetch intelligent
+   /* 🌐 FETCH — Stratégie stale-while-revalidate */
    self.addEventListener('fetch', (event) => {
+     // On ne gère que les requêtes HTTP/HTTPS
+     if (!event.request.url.startsWith('http')) return;
+   
      event.respondWith(
-       caches.match(event.request).then((cachedResponse) => {
-         if (cachedResponse) return cachedResponse; // trouvé dans le cache
-         return fetch(event.request)
+       caches.open(CACHE_NAME).then(async (cache) => {
+         const cached = await cache.match(event.request);
+         const networkFetch = fetch(event.request)
            .then((networkResponse) => {
-             // Mettre à jour le cache dynamique
-             return caches.open(CACHE_NAME).then((cache) => {
+             if (networkResponse && networkResponse.status === 200) {
                cache.put(event.request, networkResponse.clone());
-               return networkResponse;
-             });
+               console.log(`🔄 [SW] Mise à jour du cache : ${event.request.url}`);
+             }
+             return networkResponse;
            })
            .catch(() => {
-             // En cas d’échec réseau, afficher la page offline si dispo
+             if (cached) return cached;
              if (event.request.mode === 'navigate') {
-               return caches.match('./offline.html');
+               return cache.match('./offline.html');
              }
            });
+   
+         // Sert d’abord le cache si dispo, sinon le réseau
+         return cached || networkFetch;
        })
      );
    });
