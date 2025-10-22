@@ -1225,4 +1225,27 @@ body {
      color: #facc15 !important;     /* doré quand actif */
      text-shadow: 0 0 6px rgba(250,204,21,0.25);
    }
-   
+   /* ============================================================
+   🚚 BADGE "AUTRE LABO" — mise en évidence claire
+   ============================================================ */
+.external-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(250, 204, 21, 0.15);   /* jaune doux */
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  color: #facc15;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 6px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.external-badge span {
+  font-size: 0.75rem;
+  color: #facc15;
+  font-weight: 500;
+}

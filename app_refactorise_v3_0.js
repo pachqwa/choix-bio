@@ -177,7 +177,13 @@ const renderResults = (list) => {
       String(a.envoi_autre_labo).toLowerCase() === 'true' ||
       String(a.Envoi_autre_labo).toLowerCase() === 'vrai' ||
       String(a.Envoit_autre_labo).toLowerCase() === 'vrai';
-    const truck = truckFlag ? '<span class="badge-truck" title="Envoi autre laboratoire">🚚</span>' : '';
+    // ✅ Badge "Autre labo" plus visible
+      const truck = truckFlag
+      ? `<span class="external-badge" title="Envoi autre laboratoire">
+          🚚 <span>Autre labo</span>
+        </span>`
+      : '';
+
 
     const li = document.createElement('li');
     li.className = 'result-item';
