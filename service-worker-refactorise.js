@@ -14,8 +14,8 @@
    const STATIC_ASSETS = [
      './',
      './index.html',
-     './style_cleaned.css',
-     './app_refactorise_v2_3.js',
+     './style_cleaned_v2_6_6.css',
+     './app_refactorise_v3_0.js',
      './Liste-analyse-correspondance.json',
      './manifest.json',
      './offline.html',
@@ -74,13 +74,39 @@
      );
    });
    
-   /* ============================================================
-      🔔 MESSAGE — Activation immédiate du nouveau SW
-      ============================================================ */
-   self.addEventListener('message', (event) => {
-     if (event.data && event.data.type === 'SKIP_WAITING') {
-       console.log('⚡ [SW] Skip waiting activé — passage à la nouvelle version');
-       self.skipWaiting();
-     }
-   });
-   
+  /* ============================================================
+   🔔 COMMUNICATION & MESSAGERIE SERVICE WORKER
+   ------------------------------------------------------------
+   - Gère SKIP_WAITING, CLEAR_CACHES et GET_VERSION
+   - Envoie la version actuelle à toutes les pages contrôlées
+   ============================================================ */
+self.addEventListener('message', (event) => {
+  if (!event.data) return;
+
+  // ⚡ Passage immédiat à la nouvelle version
+  if (event.data.type === 'SKIP_WAITING') {
+    console.log('⚡ [SW] Skip waiting activé — passage à la nouvelle version');
+    self.skipWaiting();
+  }
+
+  // 🧹 Vider tous les caches
+  if (event.data.type === 'CLEAR_CACHES') {
+    caches.keys().then(keys => {
+      keys.forEach(key => caches.delete(key));
+    });
+    event.source?.postMessage({ type: 'CACHE_CLEARED' });
+  }
+
+  // 🧠 Répondre à la demande de version SW
+  if (event.data.type === 'GET_VERSION') {
+    console.log(`📢 [SW] Envoi version SW : ${CACHE_VERSION}`);
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'VERSION',
+          version: CACHE_VERSION
+        });
+      });
+    });
+  }
+});

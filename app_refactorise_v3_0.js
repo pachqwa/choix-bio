@@ -31,6 +31,37 @@ let favorites   = [];            // tableau d'IDs (Analyse_id)
 let showingFavs = false;         // si la vue "favoris" est active
 let sortCriteria= 'nom';         // 'nom' | 'tube'
 
+
+/* ============================================================
+   🔧 ENREGISTREMENT & COMMUNICATION SERVICE WORKER
+   ============================================================ */
+   if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("service-worker-refactorise.js")
+        .then((reg) => {
+          console.log("✅ [App] SW enregistré :", reg.scope);
+  
+          // 🔁 Demande la version au SW après l’enregistrement
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: "GET_VERSION" });
+          }
+  
+          // 🧩 Écoute la réponse du SW
+          navigator.serviceWorker.addEventListener("message", (event) => {
+            if (event.data?.type === "VERSION") {
+              console.log(`🧩 [App] Version SW reçue : ${event.data.version}`);
+              const el = document.getElementById("sw-version");
+              if (el) el.textContent = `Version SW : ${event.data.version}`;
+            }
+          });
+        })
+        .catch((err) => {
+          console.error("❌ [App] Erreur SW :", err);
+        });
+    });
+  }  
+
 /* ------------------------------------------------------------
    🧰 Utilitaires
 ------------------------------------------------------------ */
@@ -832,5 +863,32 @@ if ('serviceWorker' in navigator) {
       location.reload(true);
     }
   });
-})();
-
+  /* ============================================================
+     🧠 DEMANDE & RÉCEPTION DE LA VERSION SW (corrigé)
+     ============================================================ */
+     if ('serviceWorker' in navigator) {
+      // 📨 Demande la version au SW actif
+      function requestSWVersion() {
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({ type: 'GET_VERSION' });
+        }
+      }
+  
+      // 🔊 Réception de la version depuis le SW
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'VERSION') {
+          console.log(`🧩 Version reçue du SW : ${event.data.version}`);
+          const versionEl = document.getElementById('sw-version');
+          if (versionEl) versionEl.textContent = `Version SW : ${event.data.version}`;
+        }
+      });
+  
+      // 🔁 Relance la demande si le contrôleur change
+      if (navigator.serviceWorker.controller) {
+        requestSWVersion();
+      } else {
+        navigator.serviceWorker.addEventListener('controllerchange', requestSWVersion);
+      }
+    }
+  })();
+  
