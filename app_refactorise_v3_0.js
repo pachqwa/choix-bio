@@ -202,9 +202,29 @@ const renderResults = (list) => {
       e.currentTarget.textContent = e.currentTarget.classList.contains('active') ? '⭐' : '☆';
     });
 
-    li.addEventListener('click', () => {
-      alert(`🔍 ${a.Analyse_nom}\nTube : ${a.Tube_nom}\nVolume : ${a.Tube_ml} ml`);
-    });
+    // --- Affichage extensible de la carte au clic ---
+li.addEventListener('click', () => {
+  const expanded = li.classList.toggle('expanded');
+
+  if (expanded) {
+    const details = document.createElement('div');
+    details.className = 'details-zone';
+    details.innerHTML = `
+      <div class="details-content">
+        <p><strong>Numéro :</strong> ${a.Analyse_id || '—'}</p>
+        <p><strong>Code :</strong> ${a.Code_analyse || '—'}</p>
+        <p><strong>Contenant :</strong> ${a.Tube_contenant || '—'}</p>
+        <p><strong>Volume :</strong> ${a.Tube_ml || '?'} ml</p>
+        <p><strong>Remarques :</strong> ${a.Remarques || 'Aucune'}</p>
+      </div>
+    `;
+    li.appendChild(details);
+  } else {
+    const existing = li.querySelector('.details-zone');
+    if (existing) existing.remove();
+  }
+});
+
 
     fadeMount(li);
     resultsList.appendChild(li);
@@ -890,5 +910,35 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('controllerchange', requestSWVersion);
       }
     }
+    
+/* ============================================================
+   🌗 GESTION DU THÈME CLAIR / SOMBRE INTELLIGENT
+   ============================================================ */
+   (function() {
+    const toggleBtn = document.getElementById('themeToggle');
+  
+    // 🔹 Charger le thème depuis localStorage ou suivre la préférence système
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+    let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  
+    // 🔹 Texte du bouton selon le thème
+    const updateButton = () => {
+      toggleBtn.textContent = currentTheme === 'dark' ? '🌙' : '🌞';
+    };
+    updateButton();
+  
+    // 🔹 Événement clic → bascule de thème
+    toggleBtn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('theme', currentTheme);
+      updateButton();
+    });
+  })();  
+
+
   })();
   
