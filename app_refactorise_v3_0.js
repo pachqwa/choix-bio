@@ -630,23 +630,7 @@ window.addEventListener("offline", updateNetworkLabel);
 // Exécution initiale
 updateNetworkStatus();
 
-/* ============================================================
-   🧠 DÉTECTION DE NOUVELLE VERSION DU SERVICE WORKER
-   ============================================================ */
-   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistration().then(reg => {
-      if (!reg) return;
-      reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            showUpdateToast();
-          }
-        });
-      });
-    });
-  }
-  
+
 /* ============================================================
    🧠 MISE À JOUR SERVICE WORKER — AUTOMATIQUE EN SILENCE
    ------------------------------------------------------------
@@ -696,4 +680,148 @@ updateNetworkStatus();
       window.location.reload(true);
     });
   }
-  
+  /* ============================================================
+   🧩 PANNEAU DE DEBUG PWA — version repliable et discrète
+   ------------------------------------------------------------
+   - Visible uniquement sur PC
+   - Mode réduit / étendu toggle
+   - Actions : voir caches, vider caches, recharger SW
+   ============================================================ */
+(function () {
+  if (window.matchMedia("(display-mode: standalone)").matches || window.innerWidth < 768) return;
+
+  const panel = document.createElement("div");
+  panel.id = "debug-panel";
+  panel.innerHTML = `
+    <div id="debug-toggle" title="Ouvrir / réduire le panneau">🧩 Debug</div>
+    <div id="debug-content" hidden>
+      <div class="debug-header">PWA Debug Panel</div>
+      <div id="sw-version">Chargement version SW...</div>
+      <button id="btn-list-caches">📋 Voir les caches</button>
+      <button id="btn-clear-caches">🧹 Vider les caches</button>
+      <button id="btn-reload-sw">🔁 Recharger SW</button>
+    </div>
+  `;
+  document.body.appendChild(panel);
+
+  // Style du panneau
+  const style = document.createElement("style");
+  style.textContent = `
+    #debug-panel {
+      position: fixed;
+      bottom: 15px;
+      right: 20px;
+      font-size: 0.9rem;
+      z-index: 99999;
+      color: #e2e8f0;
+      text-align: center;
+      user-select: none;
+      font-family: system-ui, sans-serif;
+    }
+
+    #debug-toggle {
+      background: rgba(37,99,235,0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    #debug-toggle:hover {
+      background: rgba(29,78,216,0.95);
+      transform: translateY(-1px);
+    }
+
+    #debug-content {
+      margin-top: 8px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(59,130,246,0.4);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+      min-width: 240px;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    #debug-content button {
+      width: 100%;
+      margin-top: 6px;
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 6px;
+      padding: 6px;
+      color: #93c5fd;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    #debug-content button:hover {
+      background: rgba(59,130,246,0.4);
+      color: #fff;
+    }
+
+    .debug-header {
+      font-weight: bold;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 🔁 Toggle du panneau
+  const toggleBtn = panel.querySelector("#debug-toggle");
+  const content = panel.querySelector("#debug-content");
+  toggleBtn.addEventListener("click", () => {
+    const isHidden = content.hasAttribute("hidden");
+    if (isHidden) {
+      content.removeAttribute("hidden");
+      toggleBtn.textContent = "🧩 Fermer Debug";
+    } else {
+      content.setAttribute("hidden", "");
+      toggleBtn.textContent = "🧩 Debug";
+    }
+  });
+
+  // Récupération de la version SW
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(async (reg) => {
+      if (!reg) return;
+      const sw = reg.active;
+      if (sw) {
+        const version = await caches.keys();
+        document.getElementById("sw-version").textContent =
+          `SW actif : ${sw.scriptURL.split("/").pop()} (${version[0] || "aucun cache"})`;
+      }
+    });
+  }
+
+  // Boutons actions
+  document.getElementById("btn-list-caches").addEventListener("click", async () => {
+    const keys = await caches.keys();
+    alert("📋 Caches actuels :\\n" + keys.join("\\n"));
+  });
+
+  document.getElementById("btn-clear-caches").addEventListener("click", async () => {
+    const keys = await caches.keys();
+    for (const k of keys) await caches.delete(k);
+    alert("🧹 Caches supprimés. Rechargez la page !");
+  });
+
+  document.getElementById("btn-reload-sw").addEventListener("click", async () => {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) await reg.unregister();
+      alert("🔁 SW désenregistré. Rechargez la page !");
+      location.reload(true);
+    }
+  });
+})();
+
