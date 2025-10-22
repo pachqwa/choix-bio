@@ -142,15 +142,10 @@ header h1 {
     transition: color 0.25s ease, transform 0.15s ease;
   }
   
-  .result-item .star:hover {
-    color: #facc15 !important;         /* survol doré léger */
-    transform: scale(1.1);
-  }
   
   .result-item .star.active {
-    color: #facc15 !important;         /* doré net quand actif */
-    transform: none !important;
-    text-shadow: 0 0 6px rgba(250,204,21,0.3);
+    color: #facc15 !important;         /* survol doré léger */
+    transform: scale(1.1);
   }
   
 
