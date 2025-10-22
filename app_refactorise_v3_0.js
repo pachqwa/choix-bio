@@ -658,6 +658,15 @@ updateNetworkStatus();
       });
     });
   }
+// Vérifie et force la mise à jour du service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    for (const reg of registrations) {
+      reg.update(); // Force la vérification d'une nouvelle version
+    }
+  });
+}
+
   
   /* ============================================================
      🍞 TOAST VISUEL (affiché uniquement si non installé)

@@ -1,5 +1,5 @@
 /* ============================================================
-   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.7)
+   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.8)
    ------------------------------------------------------------
    - Stratégie "stale-while-revalidate"
    - Nettoyage automatique des anciens caches
