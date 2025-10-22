@@ -203,9 +203,9 @@ const renderResults = (list) => {
     li.querySelector('.star').addEventListener('click', (e) => {
       e.stopPropagation();
       toggleFavorite(a.Analyse_id);
-      // Mise à jour immédiate de la ligne
+      // Étoile toujours creuse ; seule la classe active change la couleur
       e.currentTarget.classList.toggle('active');
-      e.currentTarget.textContent = e.currentTarget.classList.contains('active') ? '⭐' : '☆';
+      e.currentTarget.textContent = '☆';
     });
 
     // --- Affichage extensible de la carte au clic ---

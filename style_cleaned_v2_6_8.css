@@ -128,26 +128,7 @@ header h1 {
   height: 16px;
   border-radius: 50%;
   margin-right: 8px;
-}
-
-/* ============================================================
-   🌟 PATCH ÉTOILES FAVORIS — version élégante
-   ============================================================ */
-   .result-item .star {
-    background: transparent !important;
-    border: none !important;
-    color: #9ca3af !important;         /* gris clair inactif */
-    font-size: 1.3rem !important;
-    cursor: pointer;
-    transition: color 0.25s ease, transform 0.15s ease;
-  }
-  
-  
-  .result-item .star.active {
-    color: #facc15 !important;         /* survol doré léger */
-    transform: scale(1.1);
-  }
-  
+}  
 
 /* ======== Barre de tri et suppression favoris ======== */
 .fav-toolbar button {
@@ -1196,30 +1177,23 @@ body {
   backdrop-filter: none !important;
 }
 /* ============================================================
-   🌟 PATCH FINAL — Suppression du contour jaune sur les étoiles
+   ⭐ PATCH FINAL — ÉTOILES FAVORIS SIMPLES (contour doré)
    ============================================================ */
-   .result-item .star,
-   .result-item .star.active {
-     border: none !important;       /* supprime tout contour ou cercle */
-     outline: none !important;
-     background: transparent !important;
-     box-shadow: none !important;
-   }
-   
    .result-item .star {
-     color: #9ca3af !important;     /* gris clair inactif */
-     font-size: 1.3rem !important;
-     transition: color 0.25s ease;
-   }
-   
-   .result-item .star:hover {
-     color: #facc15 !important;     /* doré au survol */
-   }
-   
-   .result-item .star.active {
-     color: #facc15 !important;     /* doré quand actif */
-     text-shadow: 0 0 6px rgba(250,204,21,0.25);
-   }
+    background: transparent !important;
+    border: none !important;
+    color: #9ca3af !important;     /* gris par défaut */
+    font-size: 1.4rem !important;
+    cursor: pointer;
+    transition: color 0.25s ease;
+    text-shadow: none !important;
+  }
+  
+  .result-item .star:hover { color: #facc15 !important; }
+  
+  .result-item .star.active { color: #facc15 !important; }  /* contour creux doré */
+  
+  
    /* ============================================================
    🚚 BADGE "AUTRE LABO" — mise en évidence claire
    ============================================================ */
