@@ -676,7 +676,47 @@ body {
   backdrop-filter: none !important;
 }
 
+/* ============================================================
+   🎯 PATCH VISUEL — HARMONISATION MOBILE / THEME SOMBRE
+   (Ajouté par ChatGPT à la demande de Pasqua — Octobre 2025)
+   ============================================================ */
 
+/* 1️⃣ Cadre des résultats (fond harmonisé avec le thème sombre) */
+.result-item {
+  background-color: #1e1e2f !important; /* ton sombre uniforme */
+  color: #e0e0e0 !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+
+/* 2️⃣ Étoiles Favoris — suppression effet "pop", visuel sobre */
+.result-item .star {
+  color: transparent !important;
+  border: 2px solid gold !important;
+  border-radius: 50% !important;
+  cursor: pointer;
+  transition: color 0.2s ease !important;
+}
+.result-item .star.active {
+  color: gold !important;
+  border-color: gold !important;
+  text-shadow: none !important;
+  transform: none !important;
+}
+
+/* 3️⃣ En-tête / bande blanche — uniformisation sombre */
+header, .top-bar {
+  background-color: #101020 !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  background-color: #101020 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 /* ============================================================
    ⭐ PATCH FINAL — ÉTOILES FAVORIS SIMPLES (contour doré)
    ============================================================ */
