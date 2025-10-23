@@ -1,17 +1,3 @@
-/* ============================================================
-   📱 PWA "MULTI-TUBE ANALYZER"
-   Version 3.0 — Favoris enrichis (oct. 2025)
-   Auteur : ChatGPT x Pasqua
-   ------------------------------------------------------------
-   ✅ Inclus dans cette version :
-     - Compteur de favoris dynamique dans le bouton ⭐
-     - Affichage/gestion des favoris (suppression individuelle 🗑️)
-     - Tri des favoris : par Nom / par Tube
-     - Suppression totale des favoris (🗑️ Tout supprimer)
-     - Animations douces (apparition/réapparition des éléments)
-   ⚠️ Compatible avec ta base stable (index.html + CSS + SW originaux)
-   ============================================================ */
-
 /* ------------------------------------------------------------
    🔗 Références DOM (garde tes IDs actuels dans index.html)
 ------------------------------------------------------------ */
@@ -184,7 +170,6 @@ const renderResults = (list) => {
         </span>`
       : '';
 
-
     const li = document.createElement('li');
     li.className = 'result-item';
     li.innerHTML = `
@@ -230,7 +215,6 @@ li.addEventListener('click', () => {
     if (existing) existing.remove();
   }
 });
-
 
     fadeMount(li);
     resultsList.appendChild(li);
@@ -374,42 +358,54 @@ if (clearBtn) {
     updateFavBadge();
   });
 }
-
 /* ============================================================
-   🎙️ RECHERCHE VOCALE — Web Speech API
+   🎙️ RECHERCHE VOCALE — avec alerte visuelle fiable
    ============================================================ */
-
-   (() => {
+   window.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("searchInput");
-    if (!input) return;
+    const micBtn = document.getElementById("voicebtn");
+    if (!input || !micBtn) return;
   
-    // Vérifie la compatibilité API
+    // --- Mini fonction toast ---
+    function showVoiceAlert(msg) {
+      const oldToast = document.getElementById("voice-alert");
+      if (oldToast) oldToast.remove();
+  
+      const toast = document.createElement("div");
+      toast.id = "voice-alert";
+      toast.textContent = msg;
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        background: rgba(239,68,68,0.95);
+        color: white;
+        padding: 0.7rem 1rem;
+        border-radius: 0.6rem;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "1";
+        toast.style.transform = "translateY(0)";
+      }, 50);
+      setTimeout(() => toast.remove(), 4500);
+    }
+  
+    // --- Vérifie support navigateur ---
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
-  
     if (!SpeechRecognition) {
-      console.log("🎙️ API non supportée sur ce navigateur.");
+      showVoiceAlert("🎙️ Recherche vocale non supportée par ce navigateur");
+      micBtn.disabled = true;
       return;
     }
   
-    // Crée le bouton micro
-    const micBtn = document.createElement("button");
-    micBtn.id = "voiceSearchBtn";
-    micBtn.title = "Recherche vocale";
-    micBtn.innerHTML = "🎤";
-    micBtn.style.cssText = `
-      margin-left: 6px;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(59,130,246,0.4);
-      background: rgba(59,130,246,0.15);
-      color: #e2e8f0;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    `;
-    input.insertAdjacentElement("afterend", micBtn);
-  
-    // Configuration de la reconnaissance vocale
     const recognition = new SpeechRecognition();
     recognition.lang = "fr-FR";
     recognition.interimResults = false;
@@ -419,11 +415,16 @@ if (clearBtn) {
   
     micBtn.addEventListener("click", () => {
       if (!listening) {
-        recognition.start();
-        listening = true;
-        micBtn.textContent = "🎧";
-        micBtn.style.background = "rgba(59,130,246,0.4)";
-        micBtn.title = "En écoute...";
+        try {
+          recognition.start();
+          listening = true;
+          micBtn.textContent = "🎧 En écoute...";
+          micBtn.classList.add("listening");
+        } catch (err) {
+          console.warn("🎙️ Erreur micro :", err);
+          showVoiceAlert("🚫 Micro désactivé ou inaccessible !");
+          listening = false;
+        }
       } else {
         recognition.stop();
       }
@@ -433,34 +434,35 @@ if (clearBtn) {
       const result = event.results[0][0].transcript.trim();
       input.value = result;
       input.dispatchEvent(new Event("input"));
-    
-      // Ajout automatique à l’historique si dispo
-      if (typeof addToHistory === "function") {
-        addToHistory(result);
-      } else {
-        // si addToHistory est dans une IIFE, on déclenche le même event
-        input.dispatchEvent(new Event("change"));
-      }
-    
+      if (typeof addToHistory === "function") addToHistory(result);
+      else input.dispatchEvent(new Event("change"));
       console.log("🎙️ Reçu :", result);
-    };    
+    };
   
     recognition.onend = () => {
       listening = false;
-      micBtn.textContent = "🎤";
-      micBtn.style.background = "rgba(59,130,246,0.15)";
-      micBtn.title = "Recherche vocale";
+      micBtn.textContent = "🎙 Vocal";
+      micBtn.classList.remove("listening");
     };
   
     recognition.onerror = (event) => {
       console.warn("Erreur vocale :", event.error);
       listening = false;
-      micBtn.textContent = "🎤";
-      micBtn.style.background = "rgba(59,130,246,0.15)";
-    };
-  })();
+      micBtn.textContent = "🎙 Vocal";
+      micBtn.classList.remove("listening");
   
-
+      if (event.error === "not-allowed") {
+        showVoiceAlert("🚫 Micro non autorisé — activez-le dans votre navigateur !");
+      } else if (event.error === "no-speech") {
+        showVoiceAlert("🤔 Aucun son détecté...");
+      } else if (event.error === "network") {
+        showVoiceAlert("🌐 Problème de connexion réseau");
+      } else {
+        showVoiceAlert("⚠️ Erreur inattendue du micro");
+      }
+    };
+  });
+  
 /* ==========================================================
    🔎 HISTORIQUE DE RECHERCHE — v1.0 by ChatGPT + Pasqua
    ========================================================== */
