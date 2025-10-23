@@ -161,8 +161,8 @@ button:hover,
   align-items: center;
   padding: 10px;
   margin: 6px 0;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: #0f172a; /*background-color: #0f172a;*/
   transition: all 0.3s ease;
   border-radius: 1rem;
   margin-bottom: 1rem;
@@ -174,10 +174,6 @@ button:hover,
 .result-title {
   font-weight: 600;
   font-size: 1rem;
-}
-
-.result-item:hover {
-  background: #f1f5f9;
 }
 
 .result-item.expanded {
@@ -552,7 +548,6 @@ button:hover,
   background: #1e293b;
 }
 
-
 /* ============================================================
    ⚡ Bandeau hors ligne
    ============================================================ */
@@ -661,10 +656,27 @@ button:hover,
     opacity: 1;
   }
 }
-  
+
 /* ============================================================
-  🚚 BADGE "AUTRE LABO" — mise en évidence claire
-  ============================================================ */
+   ⭐ PATCH FINAL — ÉTOILES FAVORIS SIMPLES (contour doré)
+   ============================================================ */
+   .result-item .star {
+    background: transparent !important;
+    border: none !important;
+    color: #9ca3af !important;     /* gris par défaut */
+    font-size: 1.4rem !important;
+    cursor: pointer;
+    transition: color 0.25s ease;
+    text-shadow: none !important;
+  }
+  
+  .result-item .star:hover { color: #facc15 !important; }
+  
+  .result-item .star.active { color: #facc15 !important; }  /* contour creux doré */
+  
+   /* ============================================================
+   🚚 BADGE "AUTRE LABO" — mise en évidence claire
+   ============================================================ */
 .external-badge {
   display: inline-flex;
   align-items: center;
