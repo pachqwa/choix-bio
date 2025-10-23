@@ -661,24 +661,10 @@ button:hover,
     opacity: 1;
   }
 }
-
-/* Correction fond haut page iOS */
-header, .top-bar {
-  background-color: #101020 !important;
-  color: #fff !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-body {
-  background-color: #101020 !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
   
-   /* ============================================================
-   🚚 BADGE "AUTRE LABO" — mise en évidence claire
-   ============================================================ */
+/* ============================================================
+  🚚 BADGE "AUTRE LABO" — mise en évidence claire
+  ============================================================ */
 .external-badge {
   display: inline-flex;
   align-items: center;
