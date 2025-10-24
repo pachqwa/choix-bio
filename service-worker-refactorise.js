@@ -1,12 +1,3 @@
-/* ============================================================
-   🧩 SERVICE WORKER — Mode hors ligne intelligent (v2.8)
-   ------------------------------------------------------------
-   - Stratégie "stale-while-revalidate"
-   - Nettoyage automatique des anciens caches
-   - Mise à jour silencieuse en mode PWA installée
-   - Toast visible en mode navigateur (via app_refactorise)
-   ============================================================ */
-
    const CACHE_VERSION = 'v2.9.3';
    const CACHE_NAME = `pwa-tube-cache-${CACHE_VERSION}`;
    
@@ -15,7 +6,7 @@
      './',
      './index.html',
      './style_cleaned_v2_6_8.css',
-     './app_refactorise_v3_0.js',
+     './app_refactorise_v3_2.js',
      './Liste-analyse-correspondance.json',
      './manifest.json',
      './offline.html',

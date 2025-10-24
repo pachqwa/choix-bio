@@ -6,22 +6,35 @@
   <title>Tubes & Analyses</title>
   <link rel="stylesheet" href="style_cleaned_v2_6_8.css"/>
   <link rel="manifest" href="manifest.json">
-<!-- Ton script principal (logique recherche + favoris) -->
-<script src="app_refactorise_v3_0.js" defer></script> 
+<script src="app_refactorise_v3_2.js" defer></script> 
+
+<!-- ==========================================================
+     🧰 MODE DEBUG — uniquement sur PC / développement
+     (désactiver ou commenter cette ligne avant mise en prod)
+     ========================================================== -->
+     <script src="debug-panel.js" defer></script>
+     <script>
+      if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        const s = document.createElement('script');
+        s.src = 'debug-panel.js';
+        s.defer = true;
+        document.head.appendChild(s);
+      }
+      
+    </script>
 </head>
 <body>
   <header class="top">
     <div class="header-row">
       <h1>Tubes & Analyses</h1>
-        
     <div class="search-wrap">
-      <input id="searchInput" type="search" placeholder="Rechercher une analyse..." autocomplete="off" />
+      <input id="searchInput" type="search" placeholder="" autocomplete="off" />
       <button id="voicebtn" title="voicebtn">🎙 Vocal</button>
       <button id="clearBtn" title="Effacer">✕ Effacer </button>
       <button id="favToggle" title="Voir mes favoris">⭐ Favoris</button>
     </div>
-
     <button id="ordreBtn" title="Afficher l'ordre de prélèvement">🧪 Ordre des tubes</button>
+
 <!-- ============================================================
      🧪 SECTION : ORDRE DES TUBES
      ------------------------------------------------------------
@@ -97,23 +110,18 @@
 </div>
 
     </div>
+    
+          <!--écran d’état dynamique pour ton PWA -->
+          <div id="info" class="container">Tapez pour lancer la recherche</div>
+          <ul id="results" class="results" aria-live="polite"></ul>
+    
   </header>  
-
-  <main class="container">
-    <div id="info" class="info">Tapez pour lancer la recherche</div>
-    <ul id="results" class="results" aria-live="polite"></ul>
-  </main>
 
   <footer style="margin-top:2rem; text-align:center; font-size:0.9rem;">
    <a href="mentions-confidentialite.html">Mentions légales & Politique de confidentialité</a>
   </footer>
 
 <script src="tutorial.js"></script>
-
-<!-- ⚡ Bandeau d’état de connexion -->
-<div id="offlineBanner" hidden>
-  ⚠️ Vous êtes hors ligne — les dernières données restent disponibles.
-</div>
 
 </body>
 </html>
