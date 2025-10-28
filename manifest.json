@@ -1,0 +1,10 @@
+{
+  "name": "MultiTube PWA",
+  "short_name": "MultiTube",
+  "description": "Aide les infirmières à choisir le bon tube pour les analyses — offline-first.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait",
+}
