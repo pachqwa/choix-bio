@@ -614,17 +614,16 @@ button:hover,
 /* ============================================================
    ⭐ PATCH FINAL — ÉTOILES FAVORIS SIMPLES (contour doré)
    ============================================================ */
-   .result-item .star {
+/* ⭐ Par défaut : étoile grise */
+  .result-item .star {
     background: transparent !important;
     border: none !important;
-    color: #9ca3af !important;     /* gris par défaut */
+    color: #9ca3af !important;
     font-size: 1.4rem !important;
     cursor: pointer;
-    transition: color 0.25s ease;
     text-shadow: none !important;
-  }
-  .result-item .star {
     transition: color .2s ease;
+    outline: none !important;
   }
   
   /* ⭐ état Favori (actif) */
@@ -634,7 +633,7 @@ button:hover,
   
   /* 💡 Hover uniquement si pas actif */
   .result-item .star:not(.active):hover {
-    color: #eab308 !important; /* un jaune un peu différent */
+    color: #9ca3af !important; /* un jaune un peu différent */
   }
   
    /* ============================================================
