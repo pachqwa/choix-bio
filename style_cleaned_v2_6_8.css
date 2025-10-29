@@ -623,10 +623,19 @@ button:hover,
     transition: color 0.25s ease;
     text-shadow: none !important;
   }
+  .result-item .star {
+    transition: color .2s ease;
+  }
   
-  .result-item .star:hover { color: #facc15 !important; }
+  /* ⭐ état Favori (actif) */
+  .result-item .star.active {
+    color: #facc15 !important;
+  }
   
-  .result-item .star.active { color: #facc15 !important; }  /* contour creux doré */
+  /* 💡 Hover uniquement si pas actif */
+  .result-item .star:not(.active):hover {
+    color: #eab308 !important; /* un jaune un peu différent */
+  }
   
    /* ============================================================
    🚚 BADGE "AUTRE LABO" — mise en évidence claire
