@@ -137,18 +137,16 @@ const renderResults = (list) => {
     : `🔍 ${list.length} résultat${list.length>1?'s':''} trouvé${list.length>1?'s':''}`;
 
   const frag = document.createDocumentFragment();
+  const expandedItems = []; // ✅ Pour limiter à 3
 
   for (let i = 0; i < list.length; i++) {
     const a = list[i];
     const fav = isFav(a.Analyse_id);
     const truckFlag =
-      String(a.Envoi_autre_labo).toLowerCase()  === 'true' ||
-      String(a.Envoit_autre_labo).toLowerCase() === 'true' ||
-      String(a.envoi_autre_labo).toLowerCase()  === 'true' ||
-      String(a.Envoi_autre_labo).toLowerCase()  === 'vrai' ||
-      String(a.Envoit_autre_labo).toLowerCase() === 'vrai';
+      ['true', 'vrai'].includes(String(a.Envoi_autre_labo).toLowerCase()) ||
+      ['true', 'vrai'].includes(String(a.Envoit_autre_labo).toLowerCase()) ||
+      ['true', 'vrai'].includes(String(a.envoi_autre_labo).toLowerCase());
 
-      // Affichage de chaque favori sous forme de bloc
     const li = document.createElement('li');
     li.className = 'result-item';
     li.innerHTML = `
@@ -166,18 +164,21 @@ const renderResults = (list) => {
       </div>
     `;
 
-    // Clic sur l’étoile → bascule l’état de favori
+    // ✅ Correction ÉTOILE FAVORIS : pas de changement de textContent
     const starBtn = li.querySelector('.star');
     starBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleFavorite(a.Analyse_id);
       starBtn.classList.toggle('active');
-      starBtn.textContent = '☆'; // toujours creuse, couleur via .active
     });
 
+    // ✅ Limiter à 3 détails ouverts + scroll dans vue
     li.addEventListener('click', () => {
-      const expanded = li.classList.toggle('expanded');
-      if (expanded) {
+      const isExpanded = li.classList.contains('expanded');
+
+      if (!isExpanded) {
+        li.classList.add('expanded');
+
         const details = document.createElement('div');
         details.className = 'details-zone';
         details.innerHTML = `
@@ -189,11 +190,25 @@ const renderResults = (list) => {
             <p><strong>Remarques :</strong> ${a.Remarques || 'Aucune'}</p>
           </div>`;
         li.appendChild(details);
-      } else {
-        li.querySelector('.details-zone')?.remove();
-      }
 
-      
+        expandedItems.push(li);
+
+        // ✅ Si plus de 3 → on ferme automatiquement le plus ancien
+        if (expandedItems.length > 3) {
+          const first = expandedItems.shift();
+          first.classList.remove('expanded');
+          first.querySelector('.details-zone')?.remove();
+        }
+
+        // ✅ Scroll automatique vers l’élément ouvert (confort mobile)
+        li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } else {
+        li.classList.remove('expanded');
+        li.querySelector('.details-zone')?.remove();
+        const idx = expandedItems.indexOf(li);
+        if (idx >= 0) expandedItems.splice(idx, 1);
+      }
     });
 
     fadeMount(li);

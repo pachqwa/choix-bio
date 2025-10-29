@@ -676,20 +676,19 @@ POUR LES PLUS PETITS ECRANS
 
   /* ✅ Cartes résultats : meilleure lisibilité */
   .result-item {
-    padding: 12px;
-    border-radius: 14px;
-    flex-direction: column;
-    align-items: flex-start !important;
+    display: flex;
+    flex-direction: row; /* ⭐ remet l’étoile sur la droite */
+    align-items: center;
+    padding: 10px 12px;
   }
 
   .result-left {
-    width: 100%;
-    justify-content: flex-start;
+    flex: 1 1 auto; /* ⭐ prend toute la largeur dispo, pousse l’étoile à droite */
   }
 
   .result-item .star {
-    margin-top: 6px;
-    margin-left: auto;
+    margin-left: 8px;
+    margin-top: 0; /* ⭐ plus de décalage vertical */
   }
 
   /* ✅ Texte adapté au mobile */
