@@ -300,65 +300,77 @@ button:hover,
 /* ============================================================
    HISTORIQUE DE RECHERCHE
 ============================================================ */
+/* Conteneur général */
 #search-history {
-  background: rgba(30, 41, 59, 0.95);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-top: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.35);
-  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 8px 10px 6px;
+  margin-top: 10px;
 }
 
-/*historique en mémoire*/
+/* Header compact */
 #search-history .hist-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 500;
-  color: #93c5fd;
-  margin-bottom: 6px;
+  font-size: .75rem;
+  opacity: .9;
+  margin-bottom: 4px;
 }
 
+/* Bouton "vider tout" */
 #search-history .hist-header button {
-  background: transparent;
+  background: none;
   border: none;
-  color: #f87171;
+  color: #94a3b8;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: .9rem;
+  padding: 2px 4px;
 }
 
+#search-history .hist-header button:hover {
+  color: #ef4444;
+}
+
+/* Liste des tags */
 #search-history .hist-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+/* Chaque tag */
 #search-history .hist-list li {
-  background: rgba(59, 130, 246, 0.15);
-  border-radius: 6px;
-  padding: 4px 8px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  color: #e2e8f0;
-  transition: background .2s;
-}
-
-#search-history .hist-list li:hover {
-  background: rgba(59, 130, 246, 0.35);
-}
-
-#search-history .delOne {
-  background: transparent;
-  border: none;
-  color: #f87171;
-  cursor: pointer;
+  background: #1e2634;
+  padding: 4px 8px;
+  border-radius: 10px;
   font-size: .8rem;
+}
+
+/* Nom cliquable */
+#search-history .hist-list li span {
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+/* Croix suppression */
+#search-history .hist-list .delOne {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: .8rem;
+}
+
+#search-history .hist-list .delOne:hover {
+  color: #ef4444;
 }
   
   /* ============================================================
@@ -639,4 +651,69 @@ button:hover,
   font-size: 0.75rem;
   color: #facc15;
   font-weight: 500;
+}
+
+/*------------------------
+Uniformiser l'affichage des titres de résultats, tous alignés à gauche
+--------------------------*/
+.result-left, 
+.result-title, 
+.result-sub {
+  text-align: left !important;
+}
+
+/*-------------------------
+Uniformiser l'affichage des titres de résultats, tous alignés à gauche
+--------------------------*/
+.result-left {
+  width: 100%;
+}
+
+/*------------------------
+POUR LES PLUS PETITS ECRANS
+--------------------------*/
+@media (max-width: 480px) {
+
+  /* ✅ Cartes résultats : meilleure lisibilité */
+  .result-item {
+    padding: 12px;
+    border-radius: 14px;
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .result-left {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .result-item .star {
+    margin-top: 6px;
+    margin-left: auto;
+  }
+
+  /* ✅ Texte adapté au mobile */
+  .result-title {
+    font-size: 0.95rem;
+  }
+
+  .result-sub {
+    font-size: 0.8rem;
+  }
+
+  /* ✅ Zone de détails compacte */
+  .details-zone {
+    padding: 8px 0 4px 0;
+    font-size: 0.85rem;
+  }
+
+  /* ✅ Boutons du haut empilés proprement */
+  .search-wrap {
+    flex-direction: column;
+  }
+
+  .search-wrap button {
+    width: 100%;
+    max-width: 300px;
+  }
 }

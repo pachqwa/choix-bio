@@ -192,6 +192,8 @@ const renderResults = (list) => {
       } else {
         li.querySelector('.details-zone')?.remove();
       }
+
+      
     });
 
     fadeMount(li);
@@ -307,7 +309,13 @@ const loadData = async () => { //Charge le JSON principal et prépare la recherc
     // 2) Pré-indexation pour recherches rapides
     data = data.map(a => ({
       ...a,
-      _search: norm(`${a.Analyse_nom ?? ''} ${a.Analyse_mnemonique ?? ''} ${a.Analyseur ?? ''} ${a.Tube_nom ?? ''}`)
+      _search: norm(
+        `${a.Analyse_nom ?? ''} 
+         ${a.Analyse_mnemonique ?? ''} 
+         ${a.Analyseur ?? ''} 
+         ${a.Tube_nom ?? ''} 
+         ${a.Analyse_id ?? ''}`
+      )
     }));
 
     allAnalyses = data;
@@ -384,10 +392,20 @@ function setupVoiceSearch() {
   recognition.onresult = (event) => {
     const result = event.results[0][0].transcript.trim();
     searchInput.value = result;
-    searchInput.dispatchEvent(new Event('input'));
-    if (typeof addToHistory === 'function') addToHistory(result);
-    else searchInput.dispatchEvent(new Event('change'));
+
+    // ✅ On force l'affichage des résultats directement
+    showingFavs = false;
+    updateFavBadge();
+    renderResults(filterAnalyses(result));
+    
+    // ✅ On ajoute à l'historique si possible
+    if (typeof addToHistory === 'function') {
+      addToHistory(result);
+    }
+    
     console.log('🎙️ Reçu :', result);
+    
+    
   };
 
   recognition.onend = () => {
@@ -589,6 +607,25 @@ function setupUIEvents() {
         renderFavorites();
       }
     });
+  }
+}
+/* ============================================================
+  SERVICE WORKER
+   ------------------------------------------------------------*/
+
+function setupServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker-refactorise.js')
+        .then(reg => {
+          console.log('✅ Service Worker enregistré avec succès:', reg.scope);
+        })
+        .catch(err => {
+          console.warn('❌ Échec de l’enregistrement du Service Worker:', err);
+        });
+    });
+  } else {
+    console.log('⚠️ Service Worker non supporté par ce navigateur');
   }
 }
 

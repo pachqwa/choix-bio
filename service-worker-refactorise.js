@@ -1,6 +1,8 @@
    const CACHE_VERSION = 'v2.9.3';
    const CACHE_NAME = `pwa-tube-cache-${CACHE_VERSION}`;
-   
+   self.skipWaiting(); // Active immédiatement la nouvelle version
+   self.clients.claim(); // Contrôle immédiatement toutes les pages
+
    /* 🗂️ Liste des fichiers à mettre en cache au premier chargement */
    const STATIC_ASSETS = [
      './',
