@@ -175,15 +175,41 @@ button:hover,
 } 
 
 .details-zone {
-  border-top: 1px solid rgba(59, 130, 246, 0.2);
-  padding: 0.5rem 1rem;
+  order: 3;
+  flex-basis: 100%;
+  width: 100%;
+  padding: 6px 14px 6px 38px; /* aligné sous la pastille couleur */
+  background: rgba(255, 255, 255, 0.03); /* fond très discret */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 12px 12px;
   color: #cbd5e1;
-  font-size: 0.9rem;
+  font-size: 0.83rem;           /* plus petit */
+  line-height: 1.35;
+  letter-spacing: 0.1px;
+  animation: fadeInDetails 0.25s ease;
 }
 
-.details-zone p {
-  margin: 2px 0;
-}
+  /* Désaturation des libellés pour un rendu léger */
+  .details-zone strong {
+    color: #94a3b8;
+    font-weight: 500;
+  }
+  
+  .details-zone p {
+    margin: 3px 0;
+  }
+
+    /* Effet doux d’apparition pour les details-zone ci-dessus */
+    @keyframes fadeInDetails {
+      from {
+        opacity: 0;
+        transform: translateY(-3px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
 /* ======== Barre de tri, Bouton de tri et suppression favoris ======== */
 .fav-toolbar button { 
@@ -708,12 +734,6 @@ POUR LES PLUS PETITS ECRANS
     font-size: 0.8rem;
   }
 
-  /* ✅ Zone de détails compacte */
-  .details-zone {
-    padding: 8px 0 4px 0;
-    font-size: 0.85rem;
-  }
-
   /* ✅ Boutons du haut empilés proprement */
   .search-wrap {
     flex-direction: column;
@@ -723,4 +743,42 @@ POUR LES PLUS PETITS ECRANS
     width: 100%;
     max-width: 300px;
   }
+}
+/* Boutons: feedback visuel tap/click (desktop + mobile) */
+button,
+#clearBtn, #favToggle, #ordreBtn {
+  transition: background .2s ease, transform .08s ease;
+}
+button:active,
+#clearBtn:active, #favToggle:active, #ordreBtn:active {
+  transform: scale(0.98);
+}
+
+/* Mobile: champs et boutons tactiles (≥44px) */
+@media (max-width: 480px) {
+  #searchInput {
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    border-radius: 14px;
+  }
+
+  .search-wrap {
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrap button,
+  #clearBtn, #favToggle, #ordreBtn {
+    width: 100%;
+    padding: 14px 16px;           /* zone tactile confortable */
+    font-size: 1rem;
+    border-radius: 14px;
+  }
+
+  /* Cartes un peu plus compactes */
+  .result-item { padding: 12px; }
+  .result-title { font-size: 0.98rem; }
+  .result-sub { font-size: 0.85rem; }
+  .details-zone { font-size: 0.83rem; }
 }
