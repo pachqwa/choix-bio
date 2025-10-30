@@ -795,3 +795,94 @@ button:active,
   .result-sub { font-size: 0.85rem; }
   .details-zone { font-size: 0.83rem; }
 }
+
+
+
+/* ============================================================
+   🎨 LISIBILITÉ ET HIÉRARCHIE VISUELLE
+============================================================ */
+
+/* Chaque carte = légère ombre et contraste doux */
+.result-item {
+  background: #0f172a;
+  border: 1px solid rgba(59,130,246,0.25);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Effet tactile + visuel au clic/tap */
+.result-item:active {
+  transform: scale(0.985);
+  box-shadow: 0 2px 6px rgba(59,130,246,0.3);
+}
+
+/* Titre plus lisible, sans surcharger */
+.result-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 2px;
+}
+
+/* Sous-titre plus clair et régulier */
+.result-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+/* Espace entre cartes sur mobile */
+@media (max-width: 600px) {
+  .result-item {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem 0.9rem;
+  }
+}
+
+/* ============================================================
+   📱 LISIBILITÉ MOBILE AMÉLIORÉE
+============================================================ */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px; /* taille de base plus lisible */
+  }
+
+  .result-title {
+    font-size: 0.95rem;
+  }
+
+  .result-sub {
+    font-size: 0.8rem;
+  }
+
+  .details-zone p {
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+
+  .color-dot {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+  }
+
+  .result-right .star {
+    font-size: 1.3rem;
+  }
+
+  /* légère marge interne dans la carte */
+  .result-left > div {
+    margin-left: 2px;
+  }
+}
+
+/* Transition d’ouverture du bloc détail */
+.details-zone {
+  animation: fadeInDetails 0.25s ease;
+}
+
+@keyframes fadeInDetails {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
