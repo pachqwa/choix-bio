@@ -164,13 +164,30 @@ const renderResults = (list) => {
       </div>
     `;
 
-    // ✅ Correction ÉTOILE FAVORIS : pas de changement de textContent
+    // Clic sur l’étoile → bascule l’état de favori (accessible + haptique)
     const starBtn = li.querySelector('.star');
+
+    // Accessibilité ARIA (switch)
+    starBtn.setAttribute('role', 'switch');
+    starBtn.setAttribute('aria-checked', fav ? 'true' : 'false');
+    starBtn.setAttribute('aria-label', fav ? 'Retirer des favoris' : 'Ajouter aux favoris');
+
     starBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleFavorite(a.Analyse_id);
-      starBtn.classList.toggle('active');
+      const isActive = starBtn.classList.toggle('active');
+
+      // maj ARIA + label clair
+      starBtn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+      starBtn.setAttribute('aria-label', isActive ? 'Retirer des favoris' : 'Ajouter aux favoris');
+
+      // micro-haptique sur mobile (optionnel mais agréable)
+      if (navigator.vibrate) navigator.vibrate(isActive ? 12 : 6);
+
+      // évite l'état focus persistant mobile
+      starBtn.blur();
     });
+
 
     // ✅ Limiter à 3 détails ouverts + scroll dans vue
     li.addEventListener('click', () => {
@@ -663,3 +680,4 @@ window.addEventListener('DOMContentLoaded', async () => {
   setupServiceWorker();
   updateFavBadge();
 });
+
