@@ -129,110 +129,140 @@ const renderResults = (list) => {
   resultsList.innerHTML = '';
 
   if (!list.length) {
-    info.textContent = showingFavs ? '⭐ Aucun favori enregistré.' : '🙁 Aucun résultat trouvé.';
+    info.textContent = showingFavs
+      ? '⭐ Aucun favori enregistré.'
+      : '🙁 Aucun résultat trouvé.';
     return;
   }
+
   info.textContent = showingFavs
     ? `⭐ Vos favoris (${list.length})`
     : `🔍 ${list.length} résultat${list.length>1?'s':''} trouvé${list.length>1?'s':''}`;
 
-  const frag = document.createDocumentFragment();
-  const expandedItems = []; // ✅ Pour limiter à 3
+  // ===================================================
+  // ⚙️ Variables pour le lazy loading progressif
+  // ===================================================
+  let renderIndex = 0;
+  const batchSize = 10; // ✅ 10 éléments à la fois
+  const expandedItems = []; // garde ta limite à 3 détails ouverts
 
-  for (let i = 0; i < list.length; i++) {
-    const a = list[i];
-    const fav = isFav(a.Analyse_id);
-    const truckFlag =
-      ['true', 'vrai'].includes(String(a.Envoi_autre_labo).toLowerCase()) ||
-      ['true', 'vrai'].includes(String(a.Envoit_autre_labo).toLowerCase()) ||
-      ['true', 'vrai'].includes(String(a.envoi_autre_labo).toLowerCase());
+  // ===================================================
+  // 🧩 Fonction d’affichage d’un lot (réutilise ton code)
+  // ===================================================
+  const displayBatch = (batch) => {
+    const frag = document.createDocumentFragment();
 
-    const li = document.createElement('li');
-    li.className = 'result-item';
-    li.innerHTML = `
-      <div class="result-left">
-        <div class="color-dot" style="background:${a.Tube_couleur || '#94a3b8'}"></div>
-        <div>
-          <div class="result-title">${a.Analyse_nom}${
-            truckFlag ? `<span class="external-badge" title="Envoi autre laboratoire">🚚 <span>Autre labo</span></span>` : ''
-          }</div>
-          <div class="result-sub">${a.Tube_nom ?? ''} — ${a.Tube_ml || '?'} ml (${a.Tube_contenant || 'non spécifié'})</div>
+    for (let i = 0; i < batch.length; i++) {
+      const a = batch[i];
+      const fav = isFav(a.Analyse_id);
+      const truckFlag =
+        ['true', 'vrai'].includes(String(a.Envoi_autre_labo).toLowerCase()) ||
+        ['true', 'vrai'].includes(String(a.Envoit_autre_labo).toLowerCase()) ||
+        ['true', 'vrai'].includes(String(a.envoi_autre_labo).toLowerCase());
+
+      const li = document.createElement('li');
+      li.className = 'result-item';
+      li.innerHTML = `
+        <div class="result-left">
+          <div class="color-dot" style="background:${a.Tube_couleur || '#94a3b8'}"></div>
+          <div>
+            <div class="result-title">${a.Analyse_nom}${
+              truckFlag ? `<span class="external-badge" title="Envoi autre laboratoire">🚚 <span>Autre labo</span></span>` : ''
+            }</div>
+            <div class="result-sub">${a.Tube_nom ?? ''} — ${a.Tube_ml || '?'} ml (${a.Tube_contenant || 'non spécifié'})</div>
+          </div>
         </div>
-      </div>
-      <div class="result-right">
-        <button class="star ${fav ? 'active' : ''}" aria-label="Favori">☆</button>
-      </div>
-    `;
+        <div class="result-right">
+          <button class="star ${fav ? 'active' : ''}" aria-label="Favori">☆</button>
+        </div>
+      `;
 
-    // Clic sur l’étoile → bascule l’état de favori (accessible + haptique)
-    const starBtn = li.querySelector('.star');
+      // ⭐ Gestion de l’étoile — inchangée
+      const starBtn = li.querySelector('.star');
+      starBtn.setAttribute('role', 'switch');
+      starBtn.setAttribute('aria-checked', fav ? 'true' : 'false');
+      starBtn.setAttribute('aria-label', fav ? 'Retirer des favoris' : 'Ajouter aux favoris');
 
-    // Accessibilité ARIA (switch)
-    starBtn.setAttribute('role', 'switch');
-    starBtn.setAttribute('aria-checked', fav ? 'true' : 'false');
-    starBtn.setAttribute('aria-label', fav ? 'Retirer des favoris' : 'Ajouter aux favoris');
+      starBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(a.Analyse_id);
+        const isActive = starBtn.classList.toggle('active');
+        starBtn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+        starBtn.setAttribute('aria-label', isActive ? 'Retirer des favoris' : 'Ajouter aux favoris');
+        if (navigator.vibrate) navigator.vibrate(isActive ? 12 : 6);
+        starBtn.blur();
+      });
 
-    starBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleFavorite(a.Analyse_id);
-      const isActive = starBtn.classList.toggle('active');
+      // ✅ Détails + limite à 3 ouverts
+      li.addEventListener('click', () => {
+        const isExpanded = li.classList.contains('expanded');
+        if (!isExpanded) {
+          li.classList.add('expanded');
+          const details = document.createElement('div');
+          details.className = 'details-zone';
+          details.innerHTML = `
+            <div class="details-content">
+              <p><strong>Numéro :</strong> ${a.Analyse_id || '—'}</p>
+              <p><strong>Code :</strong> ${a.Code_analyse || '—'}</p>
+              <p><strong>Contenant :</strong> ${a.Tube_contenant || '—'}</p>
+              <p><strong>Volume :</strong> ${a.Tube_ml || '?'} ml</p>
+              <p><strong>Remarques :</strong> ${a.Remarques || 'Aucune'}</p>
+            </div>`;
+          li.appendChild(details);
 
-      // maj ARIA + label clair
-      starBtn.setAttribute('aria-checked', isActive ? 'true' : 'false');
-      starBtn.setAttribute('aria-label', isActive ? 'Retirer des favoris' : 'Ajouter aux favoris');
+          expandedItems.push(li);
+          if (expandedItems.length > 3) {
+            const first = expandedItems.shift();
+            first.classList.remove('expanded');
+            first.querySelector('.details-zone')?.remove();
+          }
 
-      // micro-haptique sur mobile (optionnel mais agréable)
-      if (navigator.vibrate) navigator.vibrate(isActive ? 12 : 6);
-
-      // évite l'état focus persistant mobile
-      starBtn.blur();
-    });
-
-
-    // ✅ Limiter à 3 détails ouverts + scroll dans vue
-    li.addEventListener('click', () => {
-      const isExpanded = li.classList.contains('expanded');
-
-      if (!isExpanded) {
-        li.classList.add('expanded');
-
-        const details = document.createElement('div');
-        details.className = 'details-zone';
-        details.innerHTML = `
-          <div class="details-content">
-            <p><strong>Numéro :</strong> ${a.Analyse_id || '—'}</p>
-            <p><strong>Code :</strong> ${a.Code_analyse || '—'}</p>
-            <p><strong>Contenant :</strong> ${a.Tube_contenant || '—'}</p>
-            <p><strong>Volume :</strong> ${a.Tube_ml || '?'} ml</p>
-            <p><strong>Remarques :</strong> ${a.Remarques || 'Aucune'}</p>
-          </div>`;
-        li.appendChild(details);
-
-        expandedItems.push(li);
-
-        // ✅ Si plus de 3 → on ferme automatiquement le plus ancien
-        if (expandedItems.length > 3) {
-          const first = expandedItems.shift();
-          first.classList.remove('expanded');
-          first.querySelector('.details-zone')?.remove();
+          li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          li.classList.remove('expanded');
+          li.querySelector('.details-zone')?.remove();
+          const idx = expandedItems.indexOf(li);
+          if (idx >= 0) expandedItems.splice(idx, 1);
         }
+      });
 
-        // ✅ Scroll automatique vers l’élément ouvert (confort mobile)
-        li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      fadeMount(li);
+      frag.appendChild(li);
+    }
 
-      } else {
-        li.classList.remove('expanded');
-        li.querySelector('.details-zone')?.remove();
-        const idx = expandedItems.indexOf(li);
-        if (idx >= 0) expandedItems.splice(idx, 1);
-      }
-    });
+    resultsList.appendChild(frag);
+  };
 
-    fadeMount(li);
-    frag.appendChild(li);
-  }
+  // ===================================================
+  // 🚀 Premier affichage (10 premiers)
+  // ===================================================
+  displayBatch(list.slice(0, batchSize));
+  renderIndex = batchSize;
 
-  resultsList.appendChild(frag);
+  // ===================================================
+  // 👁️ Lazy Loading via IntersectionObserver
+  // ===================================================
+  const sentinel = document.createElement('div');
+  sentinel.id = 'scroll-sentinel';
+  sentinel.style.height = '2px';
+  resultsList.appendChild(sentinel);
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.some(e => e.isIntersecting);
+    if (visible && renderIndex < list.length) {
+      observer.unobserve(sentinel);
+
+      // 💫 Petit délai fluide avant ajout (mobile-friendly)
+      setTimeout(() => {
+        const nextBatch = list.slice(renderIndex, renderIndex + batchSize);
+        displayBatch(nextBatch);
+        renderIndex += batchSize;
+        observer.observe(sentinel);
+      }, 120); // délai léger pour plus de douceur visuelle
+    }
+  }, { threshold: 1 });
+
+  observer.observe(sentinel);
 };
 
 /* ------------------------------------------------------------
